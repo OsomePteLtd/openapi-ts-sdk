@@ -1,0 +1,8 @@
+{
+  "name": "openapi-ts-sdk",
+  "version": "0.1.0",
+  "description": "OpenAPI TypeScript SDK Generator",
+  "license": "MIT",
+  "author": "Osome",
+  "repository": "https://github.com/OsomePteLtd/openapi-ts-sdk"
+}
