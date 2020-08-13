@@ -5,6 +5,9 @@
   "license": "MIT",
   "author": "Osome",
   "repository": "https://github.com/OsomePteLtd/openapi-ts-sdk",
+  "bin": {
+    "openapi-ts-sdk": "./cli.js"
+  },
   "scripts": {
     "build": "tsc",
     "test": "jest",
@@ -12,6 +15,7 @@
     "test:updateSnapshots": "jest -u"
   },
   "dependencies": {
+    "commander": "^6.0.0",
     "lodash": "^4.17.15",
     "prettier": "^2.0.5",
     "sw2dts": "^2.6.2"

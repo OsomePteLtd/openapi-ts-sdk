@@ -1,4 +1,5 @@
 *
 !/dist/**/*.js
-!/template/**/*.ts
 /dist/tests
+!/template/**/*.ts
+!/cli.js
