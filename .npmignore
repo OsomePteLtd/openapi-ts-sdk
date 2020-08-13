@@ -1,3 +1,4 @@
 *
-!/dist
-!/template
+!/dist/**/*.js
+!/template/**/*.ts
+/dist/tests
