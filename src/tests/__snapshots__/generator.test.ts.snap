@@ -1,0 +1,299 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Anonymous Types 1`] = `
+"import { AxiosRequestConfig, AxiosError } from 'axios';
+
+import { SdkOptions } from './options';
+import { SdkRequester } from './requester';
+import * as types from './types';
+
+export function createSdkClient(options: SdkOptions) {
+  const requester = new SdkRequester(options);
+  return {
+    setAuthToken(authToken: string | undefined) {
+      requester.setAuthToken(authToken);
+    },
+    setErrorHandler(handler: (error: AxiosError) => void) {
+      requester.setErrorHandler(handler);
+    },
+    get(path: string, query?: object) {
+      return requester.get(path, query);
+    },
+    post(path: string, data?: object) {
+      return requester.post(path, data);
+    },
+    put(path: string, data?: object) {
+      return requester.put(path, data);
+    },
+    patch(path: string, data?: object) {
+      return requester.patch(path, data);
+    },
+    delete(path: string, data?: object) {
+      return requester.delete(path, data);
+    },
+    request(options: AxiosRequestConfig) {
+      return requester.request(options);
+    },
+    billing: {
+      invoices: {
+        id: (id: number | string) => ({
+          get(query?: any): Promise<types.AgGetBillingInvoicesByIdResponse> {
+            return requester.get(\`/billing/invoices/\${id}\`, query);
+          },
+        }),
+      },
+    },
+    companies: {
+      post(
+        data: types.AgPostCompaniesRequest,
+      ): Promise<types.AgPostCompaniesResponse> {
+        return requester.post(\`/companies\`, data);
+      },
+    },
+  };
+}
+
+export type SdkClient = ReturnType<typeof createSdkClient>;
+"
+`;
+
+exports[`Anonymous Types 2`] = `
+"export interface AgGetBillingInvoicesByIdResponse {
+  invoice: {
+    id: number;
+  };
+}
+export interface AgGetBillingInvoicesResponse {
+  invoices: {
+    id: number;
+  }[];
+}
+export interface AgPostCompaniesRequest {
+  company: CompanyNew;
+}
+export interface AgPostCompaniesResponse {
+  company: Company;
+}
+export interface Company {
+  id: number;
+  name: string;
+  size: number;
+}
+export interface CompanyNew {
+  name: string;
+  size: number;
+}
+"
+`;
+
+exports[`Basic Scenario 1`] = `
+"import { AxiosRequestConfig, AxiosError } from 'axios';
+
+import { SdkOptions } from './options';
+import { SdkRequester } from './requester';
+import * as types from './types';
+
+export function createSdkClient(options: SdkOptions) {
+  const requester = new SdkRequester(options);
+  return {
+    setAuthToken(authToken: string | undefined) {
+      requester.setAuthToken(authToken);
+    },
+    setErrorHandler(handler: (error: AxiosError) => void) {
+      requester.setErrorHandler(handler);
+    },
+    get(path: string, query?: object) {
+      return requester.get(path, query);
+    },
+    post(path: string, data?: object) {
+      return requester.post(path, data);
+    },
+    put(path: string, data?: object) {
+      return requester.put(path, data);
+    },
+    patch(path: string, data?: object) {
+      return requester.patch(path, data);
+    },
+    delete(path: string, data?: object) {
+      return requester.delete(path, data);
+    },
+    request(options: AxiosRequestConfig) {
+      return requester.request(options);
+    },
+    companies: {
+      id: (id: number | string) => ({
+        archive: {
+          post(data: any = {}): Promise<types.SuccessResponse> {
+            return requester.post(\`/companies/\${id}/archive\`, data);
+          },
+        },
+        get(query?: any): Promise<types.CompanyResponse> {
+          return requester.get(\`/companies/\${id}\`, query);
+        },
+        patch(
+          data: types.CompanyUpdateRequest,
+        ): Promise<types.CompanyResponse> {
+          return requester.patch(\`/companies/\${id}\`, data);
+        },
+        delete(data: any = {}): Promise<types.SuccessResponse> {
+          return requester.delete(\`/companies/\${id}\`, data);
+        },
+      }),
+      get(query?: types.CompanyQuery): Promise<types.CompaniesResponse> {
+        return requester.get(\`/companies\`, query);
+      },
+      post(data: types.CompanyNewRequest): Promise<types.CompanyResponse> {
+        return requester.post(\`/companies\`, data);
+      },
+    },
+  };
+}
+
+export type SdkClient = ReturnType<typeof createSdkClient>;
+"
+`;
+
+exports[`Basic Scenario 2`] = `
+"export interface CompaniesResponse {
+  companies: Company[];
+  totalCount: number;
+}
+export interface Company {
+  id: number;
+  name: string;
+  size: number;
+}
+export interface CompanyNew {
+  name: string;
+  size: number;
+}
+export interface CompanyNewRequest {
+  company: CompanyNew;
+}
+export interface CompanyQuery {
+  page?: number;
+  perPage?: number;
+}
+export interface CompanyResponse {
+  company: Company;
+}
+export interface CompanyUpdate {
+  name?: string;
+  size?: number;
+}
+export interface CompanyUpdateRequest {
+  company: CompanyUpdate;
+}
+export interface SuccessResponse {
+  success: boolean;
+}
+"
+`;
+
+exports[`Basic Scenario 3`] = `
+"export const schemas = {
+  SuccessResponse: {} as any,
+  Company: {} as any,
+  CompanyNew: {} as any,
+  CompanyUpdate: {} as any,
+  CompanyQuery: {} as any,
+  CompaniesResponse: {} as any,
+  CompanyResponse: {} as any,
+  CompanyNewRequest: {} as any,
+  CompanyUpdateRequest: {} as any,
+};
+
+schemas.SuccessResponse = Object.assign(schemas.SuccessResponse, {
+  type: 'object',
+  properties: { success: { type: 'boolean' } },
+  required: ['success'],
+});
+
+schemas.Company = Object.assign(schemas.Company, {
+  type: 'object',
+  properties: {
+    id: { type: 'integer' },
+    name: { type: 'string' },
+    size: { type: 'integer' },
+  },
+  required: ['id', 'name', 'size'],
+});
+
+schemas.CompanyNew = Object.assign(schemas.CompanyNew, {
+  type: 'object',
+  properties: { name: { type: 'string' }, size: { type: 'integer' } },
+  required: ['name', 'size'],
+});
+
+schemas.CompanyUpdate = Object.assign(schemas.CompanyUpdate, {
+  type: 'object',
+  properties: { name: { type: 'string' }, size: { type: 'integer' } },
+});
+
+schemas.CompanyQuery = Object.assign(schemas.CompanyQuery, {
+  type: 'object',
+  properties: { page: { type: 'integer' }, perPage: { type: 'integer' } },
+});
+
+schemas.CompaniesResponse = Object.assign(schemas.CompaniesResponse, {
+  type: 'object',
+  properties: {
+    companies: { type: 'array', items: schemas.Company },
+    totalCount: { type: 'integer' },
+  },
+  required: ['companies', 'totalCount'],
+});
+
+schemas.CompanyResponse = Object.assign(schemas.CompanyResponse, {
+  type: 'object',
+  properties: { company: schemas.Company },
+  required: ['company'],
+});
+
+schemas.CompanyNewRequest = Object.assign(schemas.CompanyNewRequest, {
+  type: 'object',
+  properties: { company: schemas.CompanyNew },
+  required: ['company'],
+});
+
+schemas.CompanyUpdateRequest = Object.assign(schemas.CompanyUpdateRequest, {
+  type: 'object',
+  properties: { company: schemas.CompanyUpdate },
+  required: ['company'],
+});
+
+Object.keys(schemas).forEach((name) => {
+  schemas[name as keyof typeof schemas].$id = name;
+});
+"
+`;
+
+exports[`Enums 1`] = `
+"export enum BankAccountStatus {
+  active = 'ACTIVE',
+  archived = 'ARCHIVED',
+  empty = '',
+}
+export enum CompanyDealStatus {
+  new = 'new',
+  won = 'won',
+  lost = 'lost',
+  lostClient = 'lostClient',
+  test = 'test',
+  junk = 'junk',
+}
+export enum CompanyType {
+  branchOfficeSingapore = 'Branch Office Singapore',
+  exemptPrivateCompanyLimitedBySharesPteLtd = 'Exempt Private Company Limited by Shares (Pte. Ltd.)',
+  privateLimitedCompanyUseOfLimitedExemption = \\"Private Limited Company, use of 'Limited' exemption\\",
+}
+export type CompanyTypeWithSimilarValues =
+  | 'Public limited company'
+  | 'Public Limited Company';
+export enum ProcessDefinitionKey {
+  csIncorporation = 'cs-incorporation',
+  csIncorporationPteLtdLocal = 'cs-incorporation-pte-ltd-local',
+  csAppointmentOfNewSecretary = 'cs-appointment-of-new-secretary',
+}
+"
+`;

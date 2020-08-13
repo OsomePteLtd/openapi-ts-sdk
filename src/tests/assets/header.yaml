@@ -1,0 +1,18 @@
+swagger: '2.0'
+info:
+  title: Osome API v2
+  description: Test
+  version: '1.0.0'
+host: 'example.com'
+basePath: /api/v2
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+securityDefinitions:
+  token:
+    name: X-Access-Token
+    type: apiKey
+    in: header
