@@ -4,10 +4,7 @@ import parseProject from 'tinyspec/lib/parseProject';
 import tmp from 'tmp';
 import YAML from 'yamljs';
 
-import { writeClient } from '../clientWriter';
-import { writeSchemas } from '../schemaWriter';
-import { readSpecFromFiles } from '../specReader';
-import { writeTypes } from '../typeWriter';
+import { generateSdk } from '..';
 
 export async function generate(endpoints: string, models: string) {
   const tmpDirTinyspec = tmp.dirSync({ unsafeCleanup: true });
@@ -26,15 +23,12 @@ export async function generate(endpoints: string, models: string) {
     trimLines(models),
   );
   const yamlSpec = parseProject(tmpDirTinyspec.name);
-  const specPath = join(tmpDirResult.name, 'openapi.json');
+  const specPath = join(tmpDirJson.name, 'openapi.json');
   fs.writeFileSync(specPath, JSON.stringify(YAML.parse(yamlSpec), null, 2));
-  const spec = readSpecFromFiles([specPath]);
+  await generateSdk([specPath], tmpDirResult.name);
   const clientPath = join(tmpDirResult.name, 'client.ts');
   const typesPath = join(tmpDirResult.name, 'types.ts');
   const schemasPath = join(tmpDirResult.name, 'schemas.ts');
-  await writeClient(spec, clientPath);
-  await writeTypes(spec, typesPath);
-  await writeSchemas(spec, schemasPath);
   const clientSource = fs.readFileSync(clientPath, 'utf8');
   const typesSource = fs.readFileSync(typesPath, 'utf8');
   const schemasSource = fs.readFileSync(schemasPath, 'utf8');
