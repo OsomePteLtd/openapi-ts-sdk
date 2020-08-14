@@ -1,0 +1,121 @@
+name: CI
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  pull_request:
+    branches:
+      - master
+
+env:
+  NPM_TOKEN: ${{ secrets.NPM_KEY_PUBLISHING }}
+
+jobs:
+  setup:
+    name: Set up
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
+      - name: Cancel previous workflow runs
+        uses: styfle/cancel-workflow-action@0.4.0
+        with:
+          access_token: ${{ github.token }}
+
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup Node.js
+        shell: bash -l {0}
+        run: nvm install
+
+      - name: Restore cache
+        uses: c-hive/gha-npm-cache@v1
+
+      - name: Install dependencies
+        run: npm ci
+
+  tests:
+    name: Unit Tests
+    needs: setup
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup Node.js
+        shell: bash -l {0}
+        run: nvm install
+
+      - name: Restore cache
+        uses: c-hive/gha-npm-cache@v1
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm run test:ci
+
+  build:
+    name: Build
+    needs: setup
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup Node.js
+        shell: bash -l {0}
+        run: nvm install
+
+      - name: Restore cache
+        uses: c-hive/gha-npm-cache@v1
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build package
+        run: npm run build
+
+  publish:
+    name: Publish package
+    needs:
+      - setup
+      - tests
+      - build
+    runs-on: ubuntu-latest
+    if: contains(github.ref, 'refs/tags/')
+
+    steps:
+      - name: Load current commit
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup Node.js
+        shell: bash -l {0}
+        run: nvm install
+
+      - name: Restore cache
+        uses: c-hive/gha-npm-cache@v1
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build package
+        run: npm run build
+
+      - name: Publish package
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_KEY_PUBLISHING }}
