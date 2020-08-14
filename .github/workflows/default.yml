@@ -41,29 +41,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-  tests:
-    name: Unit Tests
-    needs: setup
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          ref: ${{ github.ref }}
-
-      - name: Setup Node.js
-        shell: bash -l {0}
-        run: nvm install
-
-      - name: Restore cache
-        uses: c-hive/gha-npm-cache@v1
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run unit tests
-        run: npm run test:ci
-
   build:
     name: Build
     needs: setup
@@ -86,6 +63,29 @@ jobs:
 
       - name: Build package
         run: npm run build
+
+  tests:
+    name: Unit Tests
+    needs: setup
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup Node.js
+        shell: bash -l {0}
+        run: nvm install
+
+      - name: Restore cache
+        uses: c-hive/gha-npm-cache@v1
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm run test:ci
 
   publish:
     name: Publish package
