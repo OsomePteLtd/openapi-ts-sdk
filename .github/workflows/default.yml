@@ -8,9 +8,6 @@ on:
     branches:
       - master
 
-env:
-  NPM_TOKEN: ${{ secrets.NPM_KEY_PUBLISHING }}
-
 jobs:
   setup:
     name: Set up
@@ -81,36 +78,3 @@ jobs:
 
       - name: Run unit tests
         run: npm run test:ci
-
-  publish:
-    name: Publish package
-    needs:
-      - setup
-      - tests
-      - build
-    runs-on: ubuntu-latest
-    if: contains(github.ref, 'refs/tags/')
-
-    steps:
-      - name: Load current commit
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.ref }}
-
-      - name: Setup Node.js
-        shell: bash -l {0}
-        run: nvm install
-
-      - name: Restore cache
-        uses: c-hive/gha-npm-cache@v1
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build package
-        run: npm run build
-
-      - name: Publish package
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_KEY_PUBLISHING }}
