@@ -1,0 +1,22 @@
+name: Bump version
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  bump-version:
+    name: 'Bump minor version'
+    runs-on: ubuntu-latest
+    if: github.actor != 'osome-bot'
+
+    steps:
+      - name: Load current commit
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.OSOME_BOT_TOKEN }}
+
+      - uses: osomepteltd/actions/packages/bump-version@master
+        with:
+          token: ${{ secrets.OSOME_BOT_TOKEN }}
