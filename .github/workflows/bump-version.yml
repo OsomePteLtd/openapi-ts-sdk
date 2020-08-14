@@ -5,6 +5,9 @@ on:
     branches:
       - master
 
+env:
+  NPM_TOKEN: ${{ secrets.NPM_KEY_PUBLISHING }}
+
 jobs:
   bump-version:
     name: 'Bump minor version'
