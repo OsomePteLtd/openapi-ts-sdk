@@ -2,6 +2,12 @@
 
 This tool allows generating a TypeScript SDK from OpenAPI specification files. This will provide you with fully typed API library to use in a client-side application.
 
+## Install
+
+```bash
+npm install -D openapi-ts-sdk
+```
+
 ## Usage sample
 
 ```bash
