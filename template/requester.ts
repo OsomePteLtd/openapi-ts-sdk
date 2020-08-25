@@ -4,6 +4,7 @@ import axios, {
   AxiosPromise,
   AxiosRequestConfig,
 } from 'axios';
+import qs from 'qs';
 
 import { SdkOptions } from './options';
 
@@ -39,6 +40,8 @@ export class SdkRequester {
         `${this.options.baseUrl}${path}`,
         {
           params: query,
+          paramsSerializer: (params) =>
+            qs.stringify(params, { arrayFormat: 'brackets' }),
           headers: this.getHeaders(),
         },
       );
