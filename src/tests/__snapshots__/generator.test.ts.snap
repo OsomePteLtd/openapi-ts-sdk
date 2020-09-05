@@ -268,6 +268,65 @@ Object.keys(schemas).forEach((name) => {
 "
 `;
 
+exports[`Dashes and Underscores 1`] = `
+"import { AxiosRequestConfig, AxiosError } from 'axios';
+
+import { SdkOptions } from './options';
+import { SdkRequester } from './requester';
+import * as types from './types';
+
+export function createSdkClient(options: SdkOptions) {
+  const requester = new SdkRequester(options);
+  return {
+    setAuthToken(authToken: string | undefined) {
+      requester.setAuthToken(authToken);
+    },
+    setErrorHandler(handler: (error: AxiosError) => void) {
+      requester.setErrorHandler(handler);
+    },
+    get(path: string, query?: object) {
+      return requester.get(path, query);
+    },
+    post(path: string, data?: object) {
+      return requester.post(path, data);
+    },
+    put(path: string, data?: object) {
+      return requester.put(path, data);
+    },
+    patch(path: string, data?: object) {
+      return requester.patch(path, data);
+    },
+    delete(path: string, data?: object) {
+      return requester.delete(path, data);
+    },
+    request(options: AxiosRequestConfig) {
+      return requester.request(options);
+    },
+    user_roles: {
+      role_id: (role_id: number | string) => ({
+        get(query?: any): Promise<types.AgGetUserRolesByRoleIdResponse> {
+          return requester.get(\`/user-roles/\${role_id}\`, query);
+        },
+      }),
+    },
+  };
+}
+
+export type SdkClient = ReturnType<typeof createSdkClient>;
+"
+`;
+
+exports[`Dashes and Underscores 2`] = `
+"export interface AgGetUserRolesByRoleIdResponse {
+  user_role: UserRole;
+}
+export interface UserRole {
+  id: number;
+  name: string;
+}
+"
+`;
+
 exports[`Enums 1`] = `
 "export enum BankAccountStatus {
   active = 'ACTIVE',

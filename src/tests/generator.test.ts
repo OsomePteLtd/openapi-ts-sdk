@@ -96,3 +96,16 @@ it('Enums', async () => {
   const { typesSource } = await generate(endpoints, models);
   expect(typesSource).toMatchSnapshot();
 });
+
+it('Dashes and Underscores', async () => {
+  const endpoints = `
+    GET /user-roles/:role_id
+      => { user_role: UserRole }
+  `;
+  const models = `
+    UserRole { id: i, name: s }
+  `;
+  const { clientSource, typesSource } = await generate(endpoints, models);
+  expect(clientSource).toMatchSnapshot();
+  expect(typesSource).toMatchSnapshot();
+});
