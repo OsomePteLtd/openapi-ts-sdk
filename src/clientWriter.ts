@@ -61,13 +61,17 @@ function writeFooter(lines: string[]) {
 }
 
 function writeNode(spec: SdkSpec, lines: string[], node: SdkNode) {
-  if (!isNameValid(node.name)) {
+  const nodeWithValidName = {
+    ...node,
+    name: node.name.replace(/-/g, '_'),
+  };
+  if (!isNameValid(nodeWithValidName.name)) {
     return;
   }
   if (node.isFunction) {
-    writeFunctionNode(spec, lines, node);
+    writeFunctionNode(spec, lines, nodeWithValidName);
   } else {
-    writeRegularNode(spec, lines, node);
+    writeRegularNode(spec, lines, nodeWithValidName);
   }
 }
 
