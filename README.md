@@ -8,6 +8,13 @@ This tool allows generating a TypeScript SDK from OpenAPI specification files. T
 npm install -D openapi-ts-sdk
 ```
 
+You will also need some dependencies used by the generated code:
+
+```bash
+npm install -S axios qs
+npm i -D @types/qs
+```
+
 ## Usage sample
 
 ```bash
