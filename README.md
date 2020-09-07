@@ -12,7 +12,7 @@ You will also need some dependencies used by the generated code:
 
 ```bash
 npm install -S axios qs
-npm i -D @types/qs
+npm install -D @types/qs
 ```
 
 ## Usage sample
