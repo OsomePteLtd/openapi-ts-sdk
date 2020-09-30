@@ -89,6 +89,17 @@ export class SdkRequester {
     return result.data;
   }
 
+  async head(path: string, data?: object) {
+    const result = await this.axiosInstance.head(
+      `${this.options.baseUrl}${path}`,
+      {
+        data,
+        headers: this.getHeaders(),
+      },
+    );
+    return result.data;
+  }
+
   request(options: AxiosRequestConfig): AxiosPromise<any> {
     return this.axiosInstance({
       ...options,
