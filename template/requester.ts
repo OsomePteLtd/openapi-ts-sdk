@@ -15,7 +15,7 @@ export class SdkRequester {
 
   constructor(options: SdkOptions) {
     this.options = options;
-    this.axiosInstance = axios.create();
+    this.axiosInstance = axios.create({ baseURL: options.baseUrl });
   }
 
   setAuthToken(authToken: string | undefined) {
@@ -36,15 +36,12 @@ export class SdkRequester {
 
   async get(path: string, query?: object) {
     try {
-      const result = await this.axiosInstance.get(
-        `${this.options.baseUrl}${path}`,
-        {
-          params: query,
-          paramsSerializer: (params) =>
-            qs.stringify(params, { arrayFormat: 'brackets' }),
-          headers: this.getHeaders(),
-        },
-      );
+      const result = await this.axiosInstance.get(path, {
+        params: query,
+        paramsSerializer: (params) =>
+          qs.stringify(params, { arrayFormat: 'brackets' }),
+        headers: this.getHeaders(),
+      });
       return result.data;
     } catch (e) {
       throw e;
@@ -52,51 +49,39 @@ export class SdkRequester {
   }
 
   async post(path: string, data?: object) {
-    const result = await this.axiosInstance.post(
-      `${this.options.baseUrl}${path}`,
-      data,
-      { headers: this.getHeaders() },
-    );
+    const result = await this.axiosInstance.post(path, data, {
+      headers: this.getHeaders(),
+    });
     return result.data;
   }
 
   async put(path: string, data?: object) {
-    const result = await this.axiosInstance.put(
-      `${this.options.baseUrl}${path}`,
-      data,
-      { headers: this.getHeaders() },
-    );
+    const result = await this.axiosInstance.put(path, data, {
+      headers: this.getHeaders(),
+    });
     return result.data;
   }
 
   async patch(path: string, data?: object) {
-    const result = await this.axiosInstance.patch(
-      `${this.options.baseUrl}${path}`,
-      data,
-      { headers: this.getHeaders() },
-    );
+    const result = await this.axiosInstance.patch(path, data, {
+      headers: this.getHeaders(),
+    });
     return result.data;
   }
 
   async delete(path: string, data?: object) {
-    const result = await this.axiosInstance.delete(
-      `${this.options.baseUrl}${path}`,
-      {
-        data,
-        headers: this.getHeaders(),
-      },
-    );
+    const result = await this.axiosInstance.delete(path, {
+      data,
+      headers: this.getHeaders(),
+    });
     return result.data;
   }
 
   async head(path: string, data?: object) {
-    const result = await this.axiosInstance.head(
-      `${this.options.baseUrl}${path}`,
-      {
-        data,
-        headers: this.getHeaders(),
-      },
-    );
+    const result = await this.axiosInstance.head(path, {
+      data,
+      headers: this.getHeaders(),
+    });
     return result.data;
   }
 
