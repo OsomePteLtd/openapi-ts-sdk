@@ -34,9 +34,9 @@ function writeHeader(lines: string[]) {
   lines.push(`requester.setErrorHandler(handler);`);
   lines.push(`},`);
   lines.push(
-    `get(path: string, query?: object, options?: GetRequestOptions) {`,
+    `get(path: string, query?: object, getOptions?: GetRequestOptions) {`,
   );
-  lines.push(`return requester.get(path, query, options);`);
+  lines.push(`return requester.get(path, query, getOptions);`);
   lines.push(`},`);
   lines.push(`post(path: string, data?: object) {`);
   lines.push(`return requester.post(path, data);`);

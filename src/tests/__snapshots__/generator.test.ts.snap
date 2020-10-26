@@ -16,8 +16,8 @@ export function createSdkClient(options: SdkOptions) {
     setErrorHandler(handler: (error: AxiosError) => void) {
       requester.setErrorHandler(handler);
     },
-    get(path: string, query?: object, options?: GetRequestOptions) {
-      return requester.get(path, query, options);
+    get(path: string, query?: object, getOptions?: GetRequestOptions) {
+      return requester.get(path, query, getOptions);
     },
     post(path: string, data?: object) {
       return requester.post(path, data);
@@ -105,8 +105,8 @@ export function createSdkClient(options: SdkOptions) {
     setErrorHandler(handler: (error: AxiosError) => void) {
       requester.setErrorHandler(handler);
     },
-    get(path: string, query?: object, options?: GetRequestOptions) {
-      return requester.get(path, query, options);
+    get(path: string, query?: object, getOptions?: GetRequestOptions) {
+      return requester.get(path, query, getOptions);
     },
     post(path: string, data?: object) {
       return requester.post(path, data);
@@ -293,8 +293,8 @@ export function createSdkClient(options: SdkOptions) {
     setErrorHandler(handler: (error: AxiosError) => void) {
       requester.setErrorHandler(handler);
     },
-    get(path: string, query?: object, options?: GetRequestOptions) {
-      return requester.get(path, query, options);
+    get(path: string, query?: object, getOptions?: GetRequestOptions) {
+      return requester.get(path, query, getOptions);
     },
     post(path: string, data?: object) {
       return requester.post(path, data);
