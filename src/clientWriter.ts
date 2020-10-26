@@ -20,7 +20,7 @@ export async function writeClient(spec: SdkSpec, fileName: string) {
 function writeHeader(lines: string[]) {
   lines.push(`import { AxiosRequestConfig, AxiosError } from 'axios';`);
   lines.push(``);
-  lines.push(`import { SdkOptions } from './options';`);
+  lines.push(`import { GetRequestOptions, SdkOptions } from './options';`);
   lines.push(`import { SdkRequester } from './requester';`);
   lines.push(`import * as types from './types';`);
   lines.push(``);
@@ -33,8 +33,10 @@ function writeHeader(lines: string[]) {
   lines.push(`setErrorHandler(handler: (error: AxiosError) => void) {`);
   lines.push(`requester.setErrorHandler(handler);`);
   lines.push(`},`);
-  lines.push(`get(path: string, query?: object) {`);
-  lines.push(`return requester.get(path, query);`);
+  lines.push(
+    `get(path: string, query?: object, getOptions?: GetRequestOptions) {`,
+  );
+  lines.push(`return requester.get(path, query, getOptions);`);
   lines.push(`},`);
   lines.push(`post(path: string, data?: object) {`);
   lines.push(`return requester.post(path, data);`);
@@ -105,8 +107,10 @@ function writeMethod(spec: SdkSpec, lines: string[], method: SdkMethod) {
   const responseType = getTsType(spec, method.responseType);
   if (method.method === 'get') {
     const queryType = getTsType(spec, method.queryType);
-    lines.push(`get(query?: ${queryType}): Promise<${responseType}> {`);
-    lines.push(`return requester.get(\`${method.path}\`, query);`);
+    lines.push(
+      `get(query?: ${queryType}, options?: GetRequestOptions): Promise<${responseType}> {`,
+    );
+    lines.push(`return requester.get(\`${method.path}\`, query, options);`);
   } else {
     const requestType = getTsType(spec, method.requestType);
     const requestTypeWithDefault =

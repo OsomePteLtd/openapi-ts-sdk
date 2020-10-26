@@ -3,7 +3,7 @@
 exports[`Anonymous Types 1`] = `
 "import { AxiosRequestConfig, AxiosError } from 'axios';
 
-import { SdkOptions } from './options';
+import { GetRequestOptions, SdkOptions } from './options';
 import { SdkRequester } from './requester';
 import * as types from './types';
 
@@ -16,8 +16,8 @@ export function createSdkClient(options: SdkOptions) {
     setErrorHandler(handler: (error: AxiosError) => void) {
       requester.setErrorHandler(handler);
     },
-    get(path: string, query?: object) {
-      return requester.get(path, query);
+    get(path: string, query?: object, getOptions?: GetRequestOptions) {
+      return requester.get(path, query, getOptions);
     },
     post(path: string, data?: object) {
       return requester.post(path, data);
@@ -37,8 +37,11 @@ export function createSdkClient(options: SdkOptions) {
     billing: {
       invoices: {
         id: (id: number | string) => ({
-          get(query?: any): Promise<types.AgGetBillingInvoicesByIdResponse> {
-            return requester.get(\`/billing/invoices/\${id}\`, query);
+          get(
+            query?: any,
+            options?: GetRequestOptions,
+          ): Promise<types.AgGetBillingInvoicesByIdResponse> {
+            return requester.get(\`/billing/invoices/\${id}\`, query, options);
           },
         }),
       },
@@ -89,7 +92,7 @@ export interface CompanyNew {
 exports[`Basic Scenario 1`] = `
 "import { AxiosRequestConfig, AxiosError } from 'axios';
 
-import { SdkOptions } from './options';
+import { GetRequestOptions, SdkOptions } from './options';
 import { SdkRequester } from './requester';
 import * as types from './types';
 
@@ -102,8 +105,8 @@ export function createSdkClient(options: SdkOptions) {
     setErrorHandler(handler: (error: AxiosError) => void) {
       requester.setErrorHandler(handler);
     },
-    get(path: string, query?: object) {
-      return requester.get(path, query);
+    get(path: string, query?: object, getOptions?: GetRequestOptions) {
+      return requester.get(path, query, getOptions);
     },
     post(path: string, data?: object) {
       return requester.post(path, data);
@@ -127,8 +130,11 @@ export function createSdkClient(options: SdkOptions) {
             return requester.post(\`/companies/\${id}/archive\`, data);
           },
         },
-        get(query?: any): Promise<types.CompanyResponse> {
-          return requester.get(\`/companies/\${id}\`, query);
+        get(
+          query?: any,
+          options?: GetRequestOptions,
+        ): Promise<types.CompanyResponse> {
+          return requester.get(\`/companies/\${id}\`, query, options);
         },
         patch(
           data: types.CompanyUpdateRequest,
@@ -139,8 +145,11 @@ export function createSdkClient(options: SdkOptions) {
           return requester.delete(\`/companies/\${id}\`, data);
         },
       }),
-      get(query?: types.CompanyQuery): Promise<types.CompaniesResponse> {
-        return requester.get(\`/companies\`, query);
+      get(
+        query?: types.CompanyQuery,
+        options?: GetRequestOptions,
+      ): Promise<types.CompaniesResponse> {
+        return requester.get(\`/companies\`, query, options);
       },
       post(data: types.CompanyNewRequest): Promise<types.CompanyResponse> {
         return requester.post(\`/companies\`, data);
@@ -271,7 +280,7 @@ Object.keys(schemas).forEach((name) => {
 exports[`Dashes and Underscores 1`] = `
 "import { AxiosRequestConfig, AxiosError } from 'axios';
 
-import { SdkOptions } from './options';
+import { GetRequestOptions, SdkOptions } from './options';
 import { SdkRequester } from './requester';
 import * as types from './types';
 
@@ -284,8 +293,8 @@ export function createSdkClient(options: SdkOptions) {
     setErrorHandler(handler: (error: AxiosError) => void) {
       requester.setErrorHandler(handler);
     },
-    get(path: string, query?: object) {
-      return requester.get(path, query);
+    get(path: string, query?: object, getOptions?: GetRequestOptions) {
+      return requester.get(path, query, getOptions);
     },
     post(path: string, data?: object) {
       return requester.post(path, data);
@@ -304,8 +313,11 @@ export function createSdkClient(options: SdkOptions) {
     },
     user_roles: {
       role_id: (role_id: number | string) => ({
-        get(query?: any): Promise<types.AgGetUserRolesByRoleIdResponse> {
-          return requester.get(\`/user-roles/\${role_id}\`, query);
+        get(
+          query?: any,
+          options?: GetRequestOptions,
+        ): Promise<types.AgGetUserRolesByRoleIdResponse> {
+          return requester.get(\`/user-roles/\${role_id}\`, query, options);
         },
       }),
     },

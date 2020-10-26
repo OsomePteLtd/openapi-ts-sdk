@@ -6,7 +6,7 @@ import axios, {
 } from 'axios';
 import qs from 'qs';
 
-import { SdkOptions } from './options';
+import { GetRequestOptions, SdkOptions } from './options';
 
 export class SdkRequester {
   private options: SdkOptions;
@@ -34,12 +34,16 @@ export class SdkRequester {
     );
   }
 
-  async get(path: string, query?: object) {
+  async get(
+    path: string,
+    query?: object,
+    options: GetRequestOptions = { arrayFormat: 'brackets' },
+  ) {
     try {
       const result = await this.axiosInstance.get(path, {
         params: query,
         paramsSerializer: (params) =>
-          qs.stringify(params, { arrayFormat: 'brackets' }),
+          qs.stringify(params, { arrayFormat: options.arrayFormat }),
         headers: this.getHeaders(),
       });
       return result.data;
