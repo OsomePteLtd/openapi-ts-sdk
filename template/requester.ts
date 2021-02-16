@@ -102,9 +102,12 @@ export class SdkRequester {
   // private
 
   private getHeaders() {
-    if (!this.authToken) {
-      return {};
+    const headers: { [key: string]: string } = {
+      accept: 'application/json',
+    };
+    if (this.authToken) {
+      headers['x-access-token'] = this.authToken;
     }
-    return { 'x-access-token': this.authToken };
+    return headers;
   }
 }
