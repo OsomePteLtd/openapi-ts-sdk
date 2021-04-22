@@ -6,8 +6,5 @@ export interface SdkOptions {
 
 export interface RequestOptions {
   cancelToken?: CancelToken;
-}
-
-export interface GetRequestOptions extends RequestOptions {
   arrayFormat?: 'brackets' | 'indices' | 'repeat' | 'comma' | undefined;
 }

@@ -6,7 +6,7 @@ import axios, {
 } from 'axios';
 import qs from 'qs';
 
-import { GetRequestOptions, RequestOptions, SdkOptions } from './options';
+import { RequestOptions, SdkOptions } from './options';
 
 export class SdkRequester {
   private options: SdkOptions;
@@ -37,7 +37,7 @@ export class SdkRequester {
   async get(
     path: string,
     query?: object,
-    options: GetRequestOptions = { arrayFormat: 'brackets' },
+    options: RequestOptions = { arrayFormat: 'brackets' },
   ) {
     const { cancelToken, arrayFormat } = options;
     const result = await this.axiosInstance.get(path, {

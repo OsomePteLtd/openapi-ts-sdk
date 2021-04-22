@@ -20,7 +20,7 @@ export async function writeClient(spec: SdkSpec, fileName: string) {
 function writeHeader(lines: string[]) {
   lines.push(`import axios, { AxiosRequestConfig, AxiosError } from 'axios';`);
   lines.push(``);
-  lines.push(`import { GetRequestOptions, SdkOptions } from './options';`);
+  lines.push(`import { RequestOptions, SdkOptions } from './options';`);
   lines.push(`import { SdkRequester } from './requester';`);
   lines.push(`import * as types from './types';`);
   lines.push(``);
@@ -34,21 +34,21 @@ function writeHeader(lines: string[]) {
   lines.push(`requester.setErrorHandler(handler);`);
   lines.push(`},`);
   lines.push(
-    `get(path: string, query?: object, getOptions?: GetRequestOptions) {`,
+    `get(path: string, query?: object, requestOptions?: RequestOptions) {`,
   );
-  lines.push(`return requester.get(path, query, getOptions);`);
+  lines.push(`return requester.get(path, query, requestOptions);`);
   lines.push(`},`);
-  lines.push(`post(path: string, data?: object) {`);
-  lines.push(`return requester.post(path, data);`);
+  lines.push(`post(path: string, data?: object, requestOptions?: RequestOptions) {`);
+  lines.push(`return requester.post(path, data, requestOptions);`);
   lines.push(`},`);
-  lines.push(`put(path: string, data?: object) {`);
-  lines.push(`return requester.put(path, data);`);
+  lines.push(`put(path: string, data?: object, requestOptions?: RequestOptions) {`);
+  lines.push(`return requester.put(path, data, requestOptions);`);
   lines.push(`},`);
-  lines.push(`patch(path: string, data?: object) {`);
-  lines.push(`return requester.patch(path, data);`);
+  lines.push(`patch(path: string, data?: object, requestOptions?: RequestOptions) {`);
+  lines.push(`return requester.patch(path, data, requestOptions);`);
   lines.push(`},`);
-  lines.push(`delete(path: string, data?: object) {`);
-  lines.push(`return requester.delete(path, data);`);
+  lines.push(`delete(path: string, data?: object, requestOptions?: RequestOptions) {`);
+  lines.push(`return requester.delete(path, data, requestOptions);`);
   lines.push(`},`);
   lines.push(`request(options: AxiosRequestConfig) {`);
   lines.push(`return requester.request(options);`);
