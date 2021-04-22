@@ -18,7 +18,7 @@ export async function writeClient(spec: SdkSpec, fileName: string) {
 // private
 
 function writeHeader(lines: string[]) {
-  lines.push(`import { AxiosRequestConfig, AxiosError } from 'axios';`);
+  lines.push(`import axios, { AxiosRequestConfig, AxiosError } from 'axios';`);
   lines.push(``);
   lines.push(`import { GetRequestOptions, SdkOptions } from './options';`);
   lines.push(`import { SdkRequester } from './requester';`);
@@ -60,6 +60,9 @@ function writeFooter(lines: string[]) {
   lines.push(`}`);
   lines.push(``);
   lines.push(`export type SdkClient = ReturnType<typeof createSdkClient>;`);
+  lines.push(``);
+  lines.push(`export const CancelToken = axios.CancelToken;`);
+  lines.push(`export const isCancel = axios.isCancel;`);
 }
 
 function writeNode(spec: SdkSpec, lines: string[], node: SdkNode) {
