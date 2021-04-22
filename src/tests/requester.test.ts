@@ -37,7 +37,7 @@ describe('get', () => {
     expect(getNock.isDone()).toBeTruthy();
   });
 
-  it.only('cancels request', async () => {
+  it('cancels request', async () => {
     const source = axios.CancelToken.source();
     const cancellationMessage = `cancelled by client`;
 
