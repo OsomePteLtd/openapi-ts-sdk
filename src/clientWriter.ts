@@ -111,17 +111,17 @@ function writeMethod(spec: SdkSpec, lines: string[], method: SdkMethod) {
   if (method.method === 'get') {
     const queryType = getTsType(spec, method.queryType);
     lines.push(
-      `get(query?: ${queryType}, options?: GetRequestOptions): Promise<${responseType}> {`,
+      `get(query?: ${queryType}, requestOptions?: RequestOptions): Promise<${responseType}> {`,
     );
-    lines.push(`return requester.get(\`${method.path}\`, query, options);`);
+    lines.push(`return requester.get(\`${method.path}\`, query, requestOptions);`);
   } else {
     const requestType = getTsType(spec, method.requestType);
     const requestTypeWithDefault =
       requestType === 'any' ? 'any = {}' : requestType;
     lines.push(
-      `${method.method}(data: ${requestTypeWithDefault}): Promise<${responseType}> {`,
+      `${method.method}(data: ${requestTypeWithDefault}, requestOptions?: RequestOptions)): Promise<${responseType}> {`,
     );
-    lines.push(`return requester.${method.method}(\`${method.path}\`, data);`);
+    lines.push(`return requester.${method.method}(\`${method.path}\`, data, requestOptions);`);
   }
   lines.push(`},`);
 }
