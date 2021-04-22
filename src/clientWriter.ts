@@ -119,7 +119,7 @@ function writeMethod(spec: SdkSpec, lines: string[], method: SdkMethod) {
     const requestTypeWithDefault =
       requestType === 'any' ? 'any = {}' : requestType;
     lines.push(
-      `${method.method}(data: ${requestTypeWithDefault}, requestOptions?: RequestOptions)): Promise<${responseType}> {`,
+      `${method.method}(data: ${requestTypeWithDefault}, requestOptions?: RequestOptions): Promise<${responseType}> {`,
     );
     lines.push(`return requester.${method.method}(\`${method.path}\`, data, requestOptions);`);
   }
