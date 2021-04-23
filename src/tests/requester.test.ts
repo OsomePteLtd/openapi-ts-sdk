@@ -1,4 +1,5 @@
 import nock from 'nock';
+import axios from 'axios';
 
 import { SdkRequester } from '../../template/requester';
 
@@ -34,5 +35,26 @@ describe('get', () => {
       { arrayFormat: 'indices' },
     );
     expect(getNock.isDone()).toBeTruthy();
+  });
+
+  it('cancels request', async () => {
+    const source = axios.CancelToken.source();
+    const cancellationMessage = `cancelled by client`;
+
+    const baseUrl = 'https://example.com';
+    const requester = new SdkRequester({ baseUrl });
+    const expectedUrl = '/';
+    const getNock = nock(baseUrl).get(expectedUrl).delayConnection(2000).reply(200);
+    const request = requester.get(
+      '/',
+      {},
+      { cancelToken: source.token },
+    );
+    source.cancel(`cancelled by client`);
+
+    await expect(request).rejects.toEqual({
+      message: cancellationMessage,
+    });
+    expect(getNock.isDone()).toBeFalsy();
   });
 });

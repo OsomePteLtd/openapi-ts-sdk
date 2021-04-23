@@ -6,7 +6,7 @@ import axios, {
 } from 'axios';
 import qs from 'qs';
 
-import { GetRequestOptions, SdkOptions } from './options';
+import { RequestOptions, SdkOptions } from './options';
 
 export class SdkRequester {
   private options: SdkOptions;
@@ -37,54 +37,62 @@ export class SdkRequester {
   async get(
     path: string,
     query?: object,
-    options: GetRequestOptions = { arrayFormat: 'brackets' },
+    options: RequestOptions = { arrayFormat: 'brackets' },
   ) {
-    try {
-      const result = await this.axiosInstance.get(path, {
-        params: query,
-        paramsSerializer: (params) =>
-          qs.stringify(params, { arrayFormat: options.arrayFormat }),
-        headers: this.getHeaders(),
-      });
-      return result.data;
-    } catch (e) {
-      throw e;
-    }
+    const { cancelToken, arrayFormat } = options;
+    const result = await this.axiosInstance.get(path, {
+      params: query,
+      paramsSerializer: (params) =>
+        qs.stringify(params, { arrayFormat }),
+      headers: this.getHeaders(),
+      cancelToken,
+    });
+    return result.data;
   }
 
-  async post(path: string, data?: object) {
+  async post(path: string, data?: object, options: RequestOptions = {}) {
+    const { cancelToken } = options;
     const result = await this.axiosInstance.post(path, data, {
       headers: this.getHeaders(),
+      cancelToken,
     });
     return result.data;
   }
 
-  async put(path: string, data?: object) {
+  async put(path: string, data?: object, options: RequestOptions = {}) {
+    const { cancelToken } = options;
     const result = await this.axiosInstance.put(path, data, {
       headers: this.getHeaders(),
+      cancelToken,
     });
     return result.data;
   }
 
-  async patch(path: string, data?: object) {
+  async patch(path: string, data?: object, options: RequestOptions = {}) {
+    const { cancelToken } = options;
     const result = await this.axiosInstance.patch(path, data, {
       headers: this.getHeaders(),
+      cancelToken,
     });
     return result.data;
   }
 
-  async delete(path: string, data?: object) {
+  async delete(path: string, data?: object, options: RequestOptions = {}) {
+    const { cancelToken } = options;
     const result = await this.axiosInstance.delete(path, {
       data,
       headers: this.getHeaders(),
+      cancelToken,
     });
     return result.data;
   }
 
-  async head(path: string, data?: object) {
+  async head(path: string, data?: object, options: RequestOptions = {}) {
+    const { cancelToken } = options;
     const result = await this.axiosInstance.head(path, {
       data,
       headers: this.getHeaders(),
+      cancelToken,
     });
     return result.data;
   }

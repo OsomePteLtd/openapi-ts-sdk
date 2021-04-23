@@ -18,9 +18,9 @@ export async function writeClient(spec: SdkSpec, fileName: string) {
 // private
 
 function writeHeader(lines: string[]) {
-  lines.push(`import { AxiosRequestConfig, AxiosError } from 'axios';`);
+  lines.push(`import axios, { AxiosRequestConfig, AxiosError } from 'axios';`);
   lines.push(``);
-  lines.push(`import { GetRequestOptions, SdkOptions } from './options';`);
+  lines.push(`import { RequestOptions, SdkOptions } from './options';`);
   lines.push(`import { SdkRequester } from './requester';`);
   lines.push(`import * as types from './types';`);
   lines.push(``);
@@ -34,21 +34,21 @@ function writeHeader(lines: string[]) {
   lines.push(`requester.setErrorHandler(handler);`);
   lines.push(`},`);
   lines.push(
-    `get(path: string, query?: object, getOptions?: GetRequestOptions) {`,
+    `get(path: string, query?: object, requestOptions?: RequestOptions) {`,
   );
-  lines.push(`return requester.get(path, query, getOptions);`);
+  lines.push(`return requester.get(path, query, requestOptions);`);
   lines.push(`},`);
-  lines.push(`post(path: string, data?: object) {`);
-  lines.push(`return requester.post(path, data);`);
+  lines.push(`post(path: string, data?: object, requestOptions?: RequestOptions) {`);
+  lines.push(`return requester.post(path, data, requestOptions);`);
   lines.push(`},`);
-  lines.push(`put(path: string, data?: object) {`);
-  lines.push(`return requester.put(path, data);`);
+  lines.push(`put(path: string, data?: object, requestOptions?: RequestOptions) {`);
+  lines.push(`return requester.put(path, data, requestOptions);`);
   lines.push(`},`);
-  lines.push(`patch(path: string, data?: object) {`);
-  lines.push(`return requester.patch(path, data);`);
+  lines.push(`patch(path: string, data?: object, requestOptions?: RequestOptions) {`);
+  lines.push(`return requester.patch(path, data, requestOptions);`);
   lines.push(`},`);
-  lines.push(`delete(path: string, data?: object) {`);
-  lines.push(`return requester.delete(path, data);`);
+  lines.push(`delete(path: string, data?: object, requestOptions?: RequestOptions) {`);
+  lines.push(`return requester.delete(path, data, requestOptions);`);
   lines.push(`},`);
   lines.push(`request(options: AxiosRequestConfig) {`);
   lines.push(`return requester.request(options);`);
@@ -60,6 +60,9 @@ function writeFooter(lines: string[]) {
   lines.push(`}`);
   lines.push(``);
   lines.push(`export type SdkClient = ReturnType<typeof createSdkClient>;`);
+  lines.push(``);
+  lines.push(`export const CancelToken = axios.CancelToken;`);
+  lines.push(`export const isCancel = axios.isCancel;`);
 }
 
 function writeNode(spec: SdkSpec, lines: string[], node: SdkNode) {
@@ -108,17 +111,17 @@ function writeMethod(spec: SdkSpec, lines: string[], method: SdkMethod) {
   if (method.method === 'get') {
     const queryType = getTsType(spec, method.queryType);
     lines.push(
-      `get(query?: ${queryType}, options?: GetRequestOptions): Promise<${responseType}> {`,
+      `get(query?: ${queryType}, requestOptions?: RequestOptions): Promise<${responseType}> {`,
     );
-    lines.push(`return requester.get(\`${method.path}\`, query, options);`);
+    lines.push(`return requester.get(\`${method.path}\`, query, requestOptions);`);
   } else {
     const requestType = getTsType(spec, method.requestType);
     const requestTypeWithDefault =
       requestType === 'any' ? 'any = {}' : requestType;
     lines.push(
-      `${method.method}(data: ${requestTypeWithDefault}): Promise<${responseType}> {`,
+      `${method.method}(data: ${requestTypeWithDefault}, requestOptions?: RequestOptions): Promise<${responseType}> {`,
     );
-    lines.push(`return requester.${method.method}(\`${method.path}\`, data);`);
+    lines.push(`return requester.${method.method}(\`${method.path}\`, data, requestOptions);`);
   }
   lines.push(`},`);
 }
