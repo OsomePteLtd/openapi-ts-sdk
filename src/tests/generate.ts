@@ -6,7 +6,12 @@ import YAML from 'yamljs';
 
 import { generateSdk } from '..';
 
-export async function generate(endpoints: string, models: string) {
+export async function generate(options: {
+  endpoints: string;
+  models: string;
+  prefix?: string;
+}) {
+  const { endpoints, models, prefix } = options;
   const tmpDirTinyspec = tmp.dirSync({ unsafeCleanup: true });
   const tmpDirJson = tmp.dirSync({ unsafeCleanup: true });
   const tmpDirResult = tmp.dirSync({ unsafeCleanup: true });
@@ -25,7 +30,11 @@ export async function generate(endpoints: string, models: string) {
   const yamlSpec = parseProject(tmpDirTinyspec.name);
   const specPath = join(tmpDirJson.name, 'openapi.json');
   fs.writeFileSync(specPath, JSON.stringify(YAML.parse(yamlSpec), null, 2));
-  await generateSdk([specPath], tmpDirResult.name);
+  await generateSdk({
+    specFiles: [specPath],
+    outDir: tmpDirResult.name,
+    prefix,
+  });
   const clientPath = join(tmpDirResult.name, 'client.ts');
   const typesPath = join(tmpDirResult.name, 'types.ts');
   const schemasPath = join(tmpDirResult.name, 'schemas.ts');

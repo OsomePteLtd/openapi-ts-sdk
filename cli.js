@@ -23,6 +23,7 @@ program
     '-o, --outDir <dir>',
     'path to a directory for a generated SDK',
   )
+  .option('-p, --prefix <prefix>', 'prefix for internal schema ids')
   .arguments('<specFiles...>');
 
 program.parse(process.argv);

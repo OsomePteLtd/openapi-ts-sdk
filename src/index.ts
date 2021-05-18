@@ -6,12 +6,17 @@ import { writeSchemas } from './schemaWriter';
 import { readSpecFromFiles } from './specReader';
 import { writeTypes } from './typeWriter';
 
-export async function generateSdk(specFiles: string[], outDir: string) {
+export async function generateSdk(options: {
+  specFiles: string[];
+  outDir: string;
+  prefix?: string;
+}) {
+  const { specFiles, outDir, prefix } = options;
   const spec = readSpecFromFiles(specFiles);
   copyTemplate(outDir);
   await writeClient(spec, join(outDir, 'client.ts'));
   await writeTypes(spec, join(outDir, 'types.ts'));
-  await writeSchemas(spec, join(outDir, 'schemas.ts'));
+  await writeSchemas({ spec, fileName: join(outDir, 'schemas.ts'), prefix });
 }
 
 // private
