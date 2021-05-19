@@ -4,7 +4,13 @@ import { format } from './formatter';
 import { clone, isNameValid } from './helpers';
 import { SdkSpec } from './specReader';
 
-export async function writeSchemas(spec: SdkSpec, fileName: string) {
+export async function writeSchemas(options: {
+  spec: SdkSpec;
+  fileName: string;
+  prefix?: string;
+}) {
+  const { spec, fileName } = options;
+  const prefix = options.prefix || 'default';
   const definitions = clone(spec.definitions);
   const names = Object.keys(definitions).filter(isNameValid);
   const lines = [];
@@ -23,7 +29,9 @@ export async function writeSchemas(spec: SdkSpec, fileName: string) {
     lines.push(``);
   });
   lines.push(`Object.keys(schemas).forEach((name) => {`);
-  lines.push(`schemas[name as keyof typeof schemas].$id = name;`);
+  lines.push(
+    `schemas[name as keyof typeof schemas].$id = '${prefix}_' + name;`,
+  );
   lines.push(`});`);
   const ts = lines.join('\n');
   const postProcessed = deref(ts);

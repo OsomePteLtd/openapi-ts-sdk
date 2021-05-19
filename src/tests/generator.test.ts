@@ -31,10 +31,10 @@ it('Basic Scenario', async () => {
     CompanyNewRequest { company: CompanyNew }
     CompanyUpdateRequest { company: CompanyUpdate }
   `;
-  const { clientSource, typesSource, schemasSource } = await generate(
+  const { clientSource, typesSource, schemasSource } = await generate({
     endpoints,
     models,
-  );
+  });
   expect(clientSource).toMatchSnapshot();
   expect(typesSource).toMatchSnapshot();
   expect(schemasSource).toMatchSnapshot();
@@ -55,7 +55,7 @@ it('Anonymous Types', async () => {
     Company { id: i, name: s, size: i }
     CompanyNew { name: s, size: i }
   `;
-  const { clientSource, typesSource } = await generate(endpoints, models);
+  const { clientSource, typesSource } = await generate({ endpoints, models });
   expect(clientSource).toMatchSnapshot();
   expect(typesSource).toMatchSnapshot();
 });
@@ -93,7 +93,7 @@ it('Enums', async () => {
       ARCHIVED |
     )
   `;
-  const { typesSource } = await generate(endpoints, models);
+  const { typesSource } = await generate({ endpoints, models });
   expect(typesSource).toMatchSnapshot();
 });
 
@@ -105,7 +105,23 @@ it('Dashes and Underscores', async () => {
   const models = `
     UserRole { id: i, name: s }
   `;
-  const { clientSource, typesSource } = await generate(endpoints, models);
+  const { clientSource, typesSource } = await generate({ endpoints, models });
   expect(clientSource).toMatchSnapshot();
   expect(typesSource).toMatchSnapshot();
+});
+
+it('Schema Prefix', async () => {
+  const endpoints = `
+    GET /users/:id
+      => { user: User }
+  `;
+  const models = `
+    User { id: i, name: s }
+  `;
+  const { schemasSource } = await generate({
+    endpoints,
+    models,
+    prefix: 'myFancyPrefix',
+  });
+  expect(schemasSource).toMatchSnapshot();
 });
