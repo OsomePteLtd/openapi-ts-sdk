@@ -12,7 +12,8 @@ async function main(opts, args) {
   }
   const specFiles = args.map((arg) => path.resolve(process.cwd(), arg));
   const outDir = path.resolve(process.cwd(), opts.outDir);
-  await generateSdk(specFiles, outDir);
+  const prefix = opts.prefix;
+  await generateSdk({ specFiles, outDir, prefix });
 }
 
 program
