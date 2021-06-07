@@ -17,7 +17,7 @@
   "dependencies": {
     "commander": "^6.0.0",
     "lodash": "^4.17.15",
-    "prettier": "^2.0.5",
+    "prettier": "^2.3.0",
     "sw2dts": "^2.6.2"
   },
   "devDependencies": {
