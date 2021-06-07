@@ -15,7 +15,7 @@
     "test:updateSnapshots": "jest -u"
   },
   "dependencies": {
-    "commander": "^6.0.0",
+    "commander": "^6.2.1",
     "lodash": "^4.17.15",
     "prettier": "^2.0.5",
     "sw2dts": "^2.6.2"
