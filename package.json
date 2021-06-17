@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "commander": "^6.2.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "prettier": "^2.3.0",
     "sw2dts": "^2.6.2"
   },
