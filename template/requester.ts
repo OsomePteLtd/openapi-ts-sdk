@@ -8,6 +8,8 @@ import qs from 'qs';
 
 import { RequestOptions, SdkOptions } from './options';
 
+axios.defaults.withCredentials = true;
+
 export class SdkRequester {
   private options: SdkOptions;
   private axiosInstance: AxiosInstance;
