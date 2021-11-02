@@ -8,8 +8,6 @@ import qs from 'qs';
 
 import { RequestOptions, SdkOptions } from './options';
 
-axios.defaults.withCredentials = true;
-
 export class SdkRequester {
   private options: SdkOptions;
   private axiosInstance: AxiosInstance;
@@ -17,7 +15,10 @@ export class SdkRequester {
 
   constructor(options: SdkOptions) {
     this.options = options;
-    this.axiosInstance = axios.create({ baseURL: options.baseUrl });
+    this.axiosInstance = axios.create({
+      baseURL: options.baseUrl,
+      withCredentials: options.withCredentials,
+    });
   }
 
   setAuthToken(authToken: string | undefined) {
