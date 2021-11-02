@@ -16,7 +16,6 @@ export class SdkRequester {
   constructor(options: SdkOptions) {
     this.options = options;
     this.axiosInstance = axios.create({ baseURL: options.baseUrl, withCredentials: true });
-    this.axiosInstance.defaults;
   }
 
   setAuthToken(authToken: string | undefined) {
