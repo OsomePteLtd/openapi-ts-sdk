@@ -18,7 +18,9 @@ export async function writeSchemas(options: {
   if (typedSchemas) {
     lines.push(`import { JSONSchema6 } from 'json-schema';`);
     lines.push(`import * as types from './types';`);
-    lines.push(`interface SdkSchema<T> extends JSONSchema6 { _type?: T }`);
+    lines.push(
+      `export interface SdkSchema<T> extends JSONSchema6 { _type?: T }`,
+    );
   }
   lines.push(`export const schemas = {`);
   names.forEach((name) => {
