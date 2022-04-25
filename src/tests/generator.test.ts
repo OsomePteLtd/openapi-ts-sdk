@@ -125,3 +125,19 @@ it('Schema Prefix', async () => {
   });
   expect(schemasSource).toMatchSnapshot();
 });
+
+it('Typed Schemas', async () => {
+  const endpoints = `
+    GET /users/:id
+      => { user: User }
+  `;
+  const models = `
+    User { id: i, name: s }
+  `;
+  const { schemasSource } = await generate({
+    endpoints,
+    models,
+    typedSchemas: true,
+  });
+  expect(schemasSource).toMatchSnapshot();
+});
