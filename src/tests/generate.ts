@@ -10,8 +10,9 @@ export async function generate(options: {
   endpoints: string;
   models: string;
   prefix?: string;
+  typedSchemas?: boolean;
 }) {
-  const { endpoints, models, prefix } = options;
+  const { endpoints, models, prefix, typedSchemas } = options;
   const tmpDirTinyspec = tmp.dirSync({ unsafeCleanup: true });
   const tmpDirJson = tmp.dirSync({ unsafeCleanup: true });
   const tmpDirResult = tmp.dirSync({ unsafeCleanup: true });
@@ -34,6 +35,7 @@ export async function generate(options: {
     specFiles: [specPath],
     outDir: tmpDirResult.name,
     prefix,
+    typedSchemas,
   });
   const clientPath = join(tmpDirResult.name, 'client.ts');
   const typesPath = join(tmpDirResult.name, 'types.ts');

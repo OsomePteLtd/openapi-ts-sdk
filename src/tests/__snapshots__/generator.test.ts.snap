@@ -420,3 +420,32 @@ Object.keys(schemas).forEach((name) => {
 });
 "
 `;
+
+exports[`Typed Schemas 1`] = `
+"import { JSONSchema6 } from 'json-schema';
+import * as types from './types';
+export interface SdkSchema<T> extends JSONSchema6 {
+  _type?: T;
+}
+export const schemas = {
+  User: {} as SdkSchema<types.User>,
+  AgGetUsersByIdResponse: {} as SdkSchema<types.AgGetUsersByIdResponse>,
+};
+
+schemas.User = Object.assign(schemas.User, {
+  type: 'object',
+  properties: { id: { type: 'integer' }, name: { type: 'string' } },
+  required: ['id', 'name'],
+});
+
+schemas.AgGetUsersByIdResponse = Object.assign(schemas.AgGetUsersByIdResponse, {
+  type: 'object',
+  properties: { user: schemas.User },
+  required: ['user'],
+});
+
+Object.keys(schemas).forEach((name) => {
+  schemas[name as keyof typeof schemas].$id = 'default_' + name;
+});
+"
+`;

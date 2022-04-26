@@ -8,15 +8,24 @@ export async function writeSchemas(options: {
   spec: SdkSpec;
   fileName: string;
   prefix?: string;
+  typedSchemas?: boolean;
 }) {
-  const { spec, fileName } = options;
+  const { spec, fileName, typedSchemas } = options;
   const prefix = options.prefix || 'default';
   const definitions = clone(spec.definitions);
   const names = Object.keys(definitions).filter(isNameValid);
   const lines = [];
+  if (typedSchemas) {
+    lines.push(`import { JSONSchema6 } from 'json-schema';`);
+    lines.push(`import * as types from './types';`);
+    lines.push(
+      `export interface SdkSchema<T> extends JSONSchema6 { _type?: T }`,
+    );
+  }
   lines.push(`export const schemas = {`);
   names.forEach((name) => {
-    lines.push(`${name}: {} as any,`);
+    const schemaType = typedSchemas ? `SdkSchema<types.${name}>` : 'any';
+    lines.push(`${name}: {} as ${schemaType},`);
   });
   lines.push(`}`);
   lines.push(``);

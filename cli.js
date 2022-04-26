@@ -13,7 +13,8 @@ async function main(opts, args) {
   const specFiles = args.map((arg) => path.resolve(process.cwd(), arg));
   const outDir = path.resolve(process.cwd(), opts.outDir);
   const prefix = opts.prefix;
-  await generateSdk({ specFiles, outDir, prefix });
+  const typedSchemas = opts.typedSchemas;
+  await generateSdk({ specFiles, outDir, prefix, typedSchemas });
 }
 
 program
@@ -25,6 +26,7 @@ program
     'path to a directory for a generated SDK',
   )
   .option('-p, --prefix <prefix>', 'prefix for internal schema ids')
+  .option('--typedSchemas', 'generate typed schemas')
   .arguments('<specFiles...>');
 
 program.parse(process.argv);
