@@ -6,64 +6,17 @@ import { SdkMethod, SdkNode, SdkSpec } from './specReader';
 
 export async function writeClient(spec: SdkSpec, fileName: string) {
   const lines: string[] = [];
-  writeHeader(lines);
+  const { headerLines, footerLines } = parseClientSdk();
+  lines.push(...headerLines);
   for (const name in spec.methodsRoot.children) {
     writeNode(spec, lines, spec.methodsRoot.children[name]);
   }
-  writeFooter(lines);
+  lines.push(...footerLines);
   const formatted = await format(lines.join('\n'));
   fs.writeFileSync(fileName, formatted);
 }
 
 // private
-
-function writeHeader(lines: string[]) {
-  lines.push(`import axios, { AxiosRequestConfig, AxiosError } from 'axios';`);
-  lines.push(``);
-  lines.push(`import { RequestOptions, SdkOptions } from './options';`);
-  lines.push(`import { SdkRequester } from './requester';`);
-  lines.push(`import * as types from './types';`);
-  lines.push(``);
-  lines.push(`export function createSdkClient(options: SdkOptions) {`);
-  lines.push(`const requester = new SdkRequester(options);`);
-  lines.push(`return {`);
-  lines.push(`setAuthToken(authToken: string | undefined) {`);
-  lines.push(`requester.setAuthToken(authToken);`);
-  lines.push(`},`);
-  lines.push(`setErrorHandler(handler: (error: AxiosError) => void) {`);
-  lines.push(`requester.setErrorHandler(handler);`);
-  lines.push(`},`);
-  lines.push(
-    `get(path: string, query?: object, requestOptions?: RequestOptions) {`,
-  );
-  lines.push(`return requester.get(path, query, requestOptions);`);
-  lines.push(`},`);
-  lines.push(`post(path: string, data?: object, requestOptions?: RequestOptions) {`);
-  lines.push(`return requester.post(path, data, requestOptions);`);
-  lines.push(`},`);
-  lines.push(`put(path: string, data?: object, requestOptions?: RequestOptions) {`);
-  lines.push(`return requester.put(path, data, requestOptions);`);
-  lines.push(`},`);
-  lines.push(`patch(path: string, data?: object, requestOptions?: RequestOptions) {`);
-  lines.push(`return requester.patch(path, data, requestOptions);`);
-  lines.push(`},`);
-  lines.push(`delete(path: string, data?: object, requestOptions?: RequestOptions) {`);
-  lines.push(`return requester.delete(path, data, requestOptions);`);
-  lines.push(`},`);
-  lines.push(`request(options: AxiosRequestConfig) {`);
-  lines.push(`return requester.request(options);`);
-  lines.push(`},`);
-}
-
-function writeFooter(lines: string[]) {
-  lines.push(`};`);
-  lines.push(`}`);
-  lines.push(``);
-  lines.push(`export type SdkClient = ReturnType<typeof createSdkClient>;`);
-  lines.push(``);
-  lines.push(`export const CancelToken = axios.CancelToken;`);
-  lines.push(`export const isCancel = axios.isCancel;`);
-}
 
 function writeNode(spec: SdkSpec, lines: string[], node: SdkNode) {
   const nodeWithValidName = {
@@ -113,7 +66,9 @@ function writeMethod(spec: SdkSpec, lines: string[], method: SdkMethod) {
     lines.push(
       `get(query?: ${queryType}, requestOptions?: RequestOptions): Promise<${responseType}> {`,
     );
-    lines.push(`return requester.get(\`${method.path}\`, query, requestOptions);`);
+    lines.push(
+      `return requester.get(\`${method.path}\`, query, requestOptions);`,
+    );
   } else {
     const requestType = getTsType(spec, method.requestType);
     const requestTypeWithDefault =
@@ -121,7 +76,9 @@ function writeMethod(spec: SdkSpec, lines: string[], method: SdkMethod) {
     lines.push(
       `${method.method}(data: ${requestTypeWithDefault}, requestOptions?: RequestOptions): Promise<${responseType}> {`,
     );
-    lines.push(`return requester.${method.method}(\`${method.path}\`, data, requestOptions);`);
+    lines.push(
+      `return requester.${method.method}(\`${method.path}\`, data, requestOptions);`,
+    );
   }
   lines.push(`},`);
 }
@@ -131,4 +88,20 @@ function getTsType(spec: SdkSpec, type: string | undefined) {
     return 'any';
   }
   return `types.${type}`;
+}
+
+function parseClientSdk(): {
+  headerLines: string[];
+  footerLines: string[];
+} {
+  const fileBuffer = fs.readFileSync('template/sdkClient.ts');
+  const fileString = fileBuffer.toString();
+  const [header, footer] = fileString.split('\n    // content-to-replace\n');
+  if (!header || !footer) {
+    throw new Error('Parsing error');
+  }
+  return {
+    headerLines: header.split('\n'),
+    footerLines: footer.split('\n'),
+  };
 }
