@@ -1,6 +1,7 @@
 import axios, {
   AxiosError,
   AxiosInstance,
+  AxiosInterceptorManager,
   AxiosPromise,
   AxiosRequestConfig,
   AxiosResponse,
@@ -9,9 +10,10 @@ import qs from 'qs';
 
 import { RequestOptions, SdkOptions } from './options';
 
+type InterceptorParams<V> = Parameters<AxiosInterceptorManager<V>['use']>;
 type Interceptor<V> = {
-  onFulfilled?: (value: V) => V | Promise<V>;
-  onRejected?: (error: any) => any;
+  onFulfilled?: InterceptorParams<V>[0];
+  onRejected?: InterceptorParams<V>[1];
 };
 type Interceptors = {
   request?: Interceptor<AxiosRequestConfig>;
