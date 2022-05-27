@@ -68,6 +68,22 @@ export class SdkRequester {
     return { requestInterceptorId, responseInterceptorId };
   }
 
+  ejectInterceptor(params: {
+    requestInterceptorId?: number;
+    responseInterceptorId?: number;
+  }) {
+    if (params.requestInterceptorId) {
+      this.axiosInstance.interceptors.request.eject(
+        params.requestInterceptorId,
+      );
+    }
+    if (params.responseInterceptorId) {
+      this.axiosInstance.interceptors.response.eject(
+        params.responseInterceptorId,
+      );
+    }
+  }
+
   async get(
     path: string,
     query?: object,
