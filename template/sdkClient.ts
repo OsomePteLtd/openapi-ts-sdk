@@ -36,7 +36,7 @@ export function createSdkClient(options: SdkOptions) {
     request(options: AxiosRequestConfig) {
       return requester.request(options);
     },
-    contentToReplace: types.schemas,
+    contentToReplace: types.schemas, // content-to-replace
   };
 }
 
