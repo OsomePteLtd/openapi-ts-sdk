@@ -14,8 +14,8 @@ type Interceptor<V> = {
   onRejected?: (error: any) => any;
 };
 type Interceptors = {
-  request: Interceptor<AxiosRequestConfig>;
-  response: Interceptor<AxiosResponse>;
+  request?: Interceptor<AxiosRequestConfig>;
+  response?: Interceptor<AxiosResponse>;
 };
 
 export class SdkRequester {
@@ -47,15 +47,23 @@ export class SdkRequester {
     );
   }
 
-  setInterceptors(interceptors: Interceptors) {
-    this.axiosInstance.interceptors.request.use(
-      interceptors.request.onFulfilled,
-      interceptors.request.onRejected,
-    );
-    this.axiosInstance.interceptors.response.use(
-      interceptors.response.onFulfilled,
-      interceptors.response.onRejected,
-    );
+  setInterceptors(interceptors: Interceptors): {
+    requestInterceptorId?: number;
+    responseInterceptorId?: number;
+  } {
+    const requestInterceptorId =
+      interceptors.request &&
+      this.axiosInstance.interceptors.request.use(
+        interceptors.request.onFulfilled,
+        interceptors.request.onRejected,
+      );
+    const responseInterceptorId =
+      interceptors.response &&
+      this.axiosInstance.interceptors.response.use(
+        interceptors.response.onFulfilled,
+        interceptors.response.onRejected,
+      );
+    return { requestInterceptorId, responseInterceptorId };
   }
 
   async get(
