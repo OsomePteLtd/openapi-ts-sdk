@@ -96,9 +96,7 @@ function parseClientSdk(): {
 } {
   const fileBuffer = fs.readFileSync('template/sdkClient.ts');
   const fileString = fileBuffer.toString();
-  const [header, footer] = fileString.split(
-    '\n    contentToReplace: types.schemas, // content-to-replace\n',
-  );
+  const [header, footer] = fileString.split('\n    // content-to-replace\n');
   if (!header || !footer) {
     throw new Error('Parsing error');
   }
