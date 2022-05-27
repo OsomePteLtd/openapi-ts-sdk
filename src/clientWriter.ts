@@ -66,7 +66,9 @@ function writeMethod(spec: SdkSpec, lines: string[], method: SdkMethod) {
     lines.push(
       `get(query?: ${queryType}, requestOptions?: RequestOptions): Promise<${responseType}> {`,
     );
-    lines.push(`return requester.get(\`${method.path}\`, query, requestOptions);`);
+    lines.push(
+      `return requester.get(\`${method.path}\`, query, requestOptions);`,
+    );
   } else {
     const requestType = getTsType(spec, method.requestType);
     const requestTypeWithDefault =
@@ -74,7 +76,9 @@ function writeMethod(spec: SdkSpec, lines: string[], method: SdkMethod) {
     lines.push(
       `${method.method}(data: ${requestTypeWithDefault}, requestOptions?: RequestOptions): Promise<${responseType}> {`,
     );
-    lines.push(`return requester.${method.method}(\`${method.path}\`, data, requestOptions);`);
+    lines.push(
+      `return requester.${method.method}(\`${method.path}\`, data, requestOptions);`,
+    );
   }
   lines.push(`},`);
 }
@@ -93,7 +97,7 @@ function parseClientSdk(): {
   const fileBuffer = fs.readFileSync('template/sdkClient.ts');
   const fileString = fileBuffer.toString();
   const [header, footer] = fileString.split(
-    '    contentToReplace: types.schemas,\n',
+    '\n    contentToReplace: types.schemas,\n',
   );
   if (!header || !footer) {
     throw new Error('Parsing error');
