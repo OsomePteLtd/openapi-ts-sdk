@@ -3,10 +3,20 @@ import axios, {
   AxiosInstance,
   AxiosPromise,
   AxiosRequestConfig,
+  AxiosResponse,
 } from 'axios';
 import qs from 'qs';
 
 import { RequestOptions, SdkOptions } from './options';
+
+type Interceptor<V> = {
+  onFulfilled?: (value: V) => V | Promise<V>;
+  onRejected?: (error: any) => any;
+};
+type Interceptors = {
+  request: Interceptor<AxiosRequestConfig>;
+  response: Interceptor<AxiosResponse>;
+};
 
 export class SdkRequester {
   private options: SdkOptions;
@@ -15,7 +25,10 @@ export class SdkRequester {
 
   constructor(options: SdkOptions) {
     this.options = options;
-    this.axiosInstance = axios.create({ baseURL: options.baseUrl, withCredentials: true });
+    this.axiosInstance = axios.create({
+      baseURL: options.baseUrl,
+      withCredentials: true,
+    });
   }
 
   setAuthToken(authToken: string | undefined) {
@@ -34,6 +47,17 @@ export class SdkRequester {
     );
   }
 
+  setInterceptors(interceptors: Interceptors) {
+    this.axiosInstance.interceptors.request.use(
+      interceptors.request.onFulfilled,
+      interceptors.request.onRejected,
+    );
+    this.axiosInstance.interceptors.response.use(
+      interceptors.response.onFulfilled,
+      interceptors.response.onRejected,
+    );
+  }
+
   async get(
     path: string,
     query?: object,
@@ -42,8 +66,7 @@ export class SdkRequester {
     const { cancelToken, arrayFormat } = options;
     const result = await this.axiosInstance.get(path, {
       params: query,
-      paramsSerializer: (params) =>
-        qs.stringify(params, { arrayFormat }),
+      paramsSerializer: (params) => qs.stringify(params, { arrayFormat }),
       headers: this.getHeaders(),
       cancelToken,
     });
