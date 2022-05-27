@@ -1,12 +1,24 @@
 import axios, {
   AxiosError,
   AxiosInstance,
+  AxiosInterceptorManager,
   AxiosPromise,
   AxiosRequestConfig,
+  AxiosResponse,
 } from 'axios';
 import qs from 'qs';
 
 import { RequestOptions, SdkOptions } from './options';
+
+type InterceptorParams<V> = Parameters<AxiosInterceptorManager<V>['use']>;
+type Interceptor<V> = {
+  onFulfilled?: InterceptorParams<V>[0];
+  onRejected?: InterceptorParams<V>[1];
+};
+type Interceptors = {
+  request?: Interceptor<AxiosRequestConfig>;
+  response?: Interceptor<AxiosResponse>;
+};
 
 export class SdkRequester {
   private options: SdkOptions;
@@ -15,7 +27,10 @@ export class SdkRequester {
 
   constructor(options: SdkOptions) {
     this.options = options;
-    this.axiosInstance = axios.create({ baseURL: options.baseUrl, withCredentials: true });
+    this.axiosInstance = axios.create({
+      baseURL: options.baseUrl,
+      withCredentials: true,
+    });
   }
 
   setAuthToken(authToken: string | undefined) {
@@ -34,6 +49,41 @@ export class SdkRequester {
     );
   }
 
+  setInterceptors(interceptors: Interceptors): {
+    requestInterceptorId?: number;
+    responseInterceptorId?: number;
+  } {
+    const requestInterceptorId =
+      interceptors.request &&
+      this.axiosInstance.interceptors.request.use(
+        interceptors.request.onFulfilled,
+        interceptors.request.onRejected,
+      );
+    const responseInterceptorId =
+      interceptors.response &&
+      this.axiosInstance.interceptors.response.use(
+        interceptors.response.onFulfilled,
+        interceptors.response.onRejected,
+      );
+    return { requestInterceptorId, responseInterceptorId };
+  }
+
+  ejectInterceptor(params: {
+    requestInterceptorId?: number;
+    responseInterceptorId?: number;
+  }) {
+    if (params.requestInterceptorId) {
+      this.axiosInstance.interceptors.request.eject(
+        params.requestInterceptorId,
+      );
+    }
+    if (params.responseInterceptorId) {
+      this.axiosInstance.interceptors.response.eject(
+        params.responseInterceptorId,
+      );
+    }
+  }
+
   async get(
     path: string,
     query?: object,
@@ -42,8 +92,7 @@ export class SdkRequester {
     const { cancelToken, arrayFormat } = options;
     const result = await this.axiosInstance.get(path, {
       params: query,
-      paramsSerializer: (params) =>
-        qs.stringify(params, { arrayFormat }),
+      paramsSerializer: (params) => qs.stringify(params, { arrayFormat }),
       headers: this.getHeaders(),
       cancelToken,
     });
