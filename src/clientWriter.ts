@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { loadTemplate } from './clientTemplateLoader';
 
 import { format } from './formatter';
 import { isNameValid } from './helpers';
@@ -94,8 +95,7 @@ function parseClientSdk(): {
   headerLines: string[];
   footerLines: string[];
 } {
-  const fileBuffer = fs.readFileSync('template/sdkClient.ts');
-  const fileString = fileBuffer.toString();
+  const fileString = loadTemplate();
   const [header, footer] = fileString.split('\n    // content-to-replace\n');
   if (!header || !footer) {
     throw new Error('Parsing error');
