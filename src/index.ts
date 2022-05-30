@@ -26,10 +26,13 @@ export async function generateSdk(options: {
 }
 
 // private
+const filesToIgnore = ['sdkClient.ts'];
 
 function copyTemplate(outDir: string) {
   const templateDir = join(__dirname, '..', 'template');
-  const files = fs.readdirSync(templateDir);
+  const files = fs
+    .readdirSync(templateDir)
+    .filter((file) => !filesToIgnore.includes(file));
   for (const file of files) {
     fs.copyFileSync(join(templateDir, file), join(outDir, file));
   }
