@@ -57,6 +57,22 @@ describe('get', () => {
     expect(getNock.isDone()).toBeFalsy();
   });
 
+  it('pass idempotencyKey', async () => {
+    const baseUrl = 'https://example.com';
+    const requester = new SdkRequester({ baseUrl });
+    const getNock = nock(baseUrl)
+      .post('/path')
+      .matchHeader('idempotency-key', 'idempotency-key-value')
+      .reply(200);
+
+    await requester.post(
+      '/path',
+      {},
+      { idempotencyKey: 'idempotency-key-value' },
+    );
+    expect(getNock.isDone()).toBeTruthy();
+  });
+
   it('catch request & response interceptors', async () => {
     const baseUrl = 'https://example.com';
     const requester = new SdkRequester({ baseUrl });
