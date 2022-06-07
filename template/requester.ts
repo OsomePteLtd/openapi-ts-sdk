@@ -166,7 +166,7 @@ export class SdkRequester {
       headers['x-access-token'] = this.authToken;
     }
     if (idempotencyKey) {
-      headers['idempotency-key'] = idempotencyKey;
+      headers['Idempotency-Key'] = idempotencyKey;
     }
     return headers;
   }

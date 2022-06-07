@@ -62,7 +62,7 @@ describe('get', () => {
     const requester = new SdkRequester({ baseUrl });
     const getNock = nock(baseUrl)
       .post('/path')
-      .matchHeader('idempotency-key', 'idempotency-key-value')
+      .matchHeader('Idempotency-Key', 'idempotency-key-value')
       .reply(200);
 
     await requester.post(
