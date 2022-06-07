@@ -7,4 +7,5 @@ export interface SdkOptions {
 export interface RequestOptions {
   cancelToken?: CancelToken;
   arrayFormat?: 'brackets' | 'indices' | 'repeat' | 'comma' | undefined;
+  idempotencyKey?: string;
 }

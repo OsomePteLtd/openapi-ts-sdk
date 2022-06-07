@@ -100,9 +100,9 @@ export class SdkRequester {
   }
 
   async post(path: string, data?: object, options: RequestOptions = {}) {
-    const { cancelToken } = options;
+    const { cancelToken, idempotencyKey } = options;
     const result = await this.axiosInstance.post(path, data, {
-      headers: this.getHeaders(),
+      headers: this.getHeaders({ idempotencyKey }),
       cancelToken,
     });
     return result.data;
@@ -158,12 +158,15 @@ export class SdkRequester {
 
   // private
 
-  private getHeaders() {
+  private getHeaders({ idempotencyKey }: { idempotencyKey?: string } = {}) {
     const headers: { [key: string]: string } = {
       accept: 'application/json',
     };
     if (this.authToken) {
       headers['x-access-token'] = this.authToken;
+    }
+    if (idempotencyKey) {
+      headers['Idempotency-Key'] = idempotencyKey;
     }
     return headers;
   }
