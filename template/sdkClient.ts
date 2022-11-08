@@ -7,7 +7,7 @@ import * as types from './types';
 export function createSdkClient(options: SdkOptions) {
   const requester = new SdkRequester(options);
   return {
-    setAuthToken(authToken: string | undefined) {
+    setAuthToken(authToken: string | undefined | null) {
       requester.setAuthToken(authToken);
     },
     setErrorHandler(handler: (error: AxiosError) => void) {
