@@ -23,7 +23,7 @@ type Interceptors = {
 export class SdkRequester {
   private options: SdkOptions;
   private axiosInstance: AxiosInstance;
-  private authToken?: string;
+  private authToken?: string | null;
 
   constructor(options: SdkOptions) {
     this.options = options;
@@ -33,7 +33,7 @@ export class SdkRequester {
     });
   }
 
-  setAuthToken(authToken: string | undefined) {
+  setAuthToken(authToken: string | undefined | null) {
     this.authToken = authToken;
   }
 
