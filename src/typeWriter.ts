@@ -68,12 +68,21 @@ function createOpenApi3Schema(definitions: any): Schema {
 }
 
 function dereferences(definitions: any) {
-  const newDefinitions = JSON.parse(
-    JSON.stringify(definitions).replace(/#\/components\/schemas\//g, ''),
-  )
-  for (const name in newDefinitions) {
-    const schema = newDefinitions[name];
+  for (const name in definitions) {
+    const schema = definitions[name];
+    fixRef(schema);
     schema['$id'] = name;
   }
-  return newDefinitions;
+  return definitions;
+}
+
+function fixRef(obj: any) {
+  for (const key in obj) {
+      if (key === "$ref") {
+          obj["$ref"] = obj["$ref"].split("/").pop();
+      }
+      else if (typeof obj[key] === "object") {
+          fixRef(obj[key]);
+      }
+  }
 }
