@@ -265,7 +265,7 @@ function getOpenApiVersionFromFiles(files: string[]) {
   const [firstSpec] = specs;
   const ver = getOpenApiVersionFromSpec(firstSpec);
   if (specs.some((spec) => getOpenApiVersionFromSpec(spec) !== ver)) {
-    throw new Error("files should have same version");
+    throw new Error("Specifications should be the same version");
   }
   return ver;
 }
