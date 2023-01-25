@@ -1,7 +1,7 @@
 import fs from 'fs';
 
 import { pascalCase } from './helpers';
-import { getOpenApiVersionFromFiles, isV2, isV3, OpenApiVersion } from './specVersion';
+import { getOpenApiVersion, isV2, isV3, OpenApiVersion } from './specVersion';
 
 export interface SdkSpec {
   methodsRoot: SdkNode;
@@ -29,7 +29,7 @@ export interface SdkMethod {
 export function readSpecFromFiles(
   files: string[],
 ) {
-  const openApiVersion = getOpenApiVersionFromFiles(files);
+  const openApiVersion = getOpenApiVersion(files);
   const resultSpec: SdkSpec = {
     methodsRoot: createRootNode(),
     definitions: {},
