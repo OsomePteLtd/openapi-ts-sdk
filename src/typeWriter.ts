@@ -6,14 +6,15 @@ import { SdkSpec } from './specReader';
 import { clone } from './helpers';
 import dtsgenerator, { SchemaId, Schema } from 'dtsgenerator';
 import * as sw2dts from 'sw2dts';
-import { OpenApiVersion } from './specVersion';
+import { isV2, isV3, OpenApiVersion } from './specVersion';
 
 export async function writeTypes(spec: SdkSpec, fileName: string) {
+  const { openApiVersion } = spec;
   const definitions = clone(spec.definitions);
   let tsTypes = '';
-  if (spec.openApiVersion === OpenApiVersion.v2) {
+  if (isV2(openApiVersion)) {
     tsTypes = await sw2dts.convert({ definitions } as any);
-  } else if (spec.openApiVersion === OpenApiVersion.v3) {
+  } else if (isV3(openApiVersion)) {
     tsTypes = await dtsgenerator({
       contents: [createOpenApi3Schema(definitions)],
     });
