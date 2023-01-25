@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "commander": "^6.2.1",
+    "dtsgenerator": "^3.16.2",
     "lodash": "^4.17.15",
     "prettier": "^2.3.0",
     "sw2dts": "^2.6.2"
@@ -36,7 +37,7 @@
     "tinyspec": "^2.4.3",
     "tmp": "^0.2.1",
     "ts-jest": "^26.1.1",
-    "typescript": "^3.9.3",
+    "typescript": "^4.9.4",
     "yamljs": "^0.3.0"
   }
 }
