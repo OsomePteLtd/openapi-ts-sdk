@@ -399,7 +399,7 @@ export enum CompanyDealStatus {
 export enum CompanyType {
   branchOfficeSingapore = 'Branch Office Singapore',
   exemptPrivateCompanyLimitedBySharesPteLtd = 'Exempt Private Company Limited by Shares (Pte. Ltd.)',
-  privateLimitedCompanyUseOfLimitedExemption = \\"Private Limited Company, use of 'Limited' exemption\\",
+  privateLimitedCompanyUseOfLimitedExemption = "Private Limited Company, use of 'Limited' exemption",
 }
 export type CompanyTypeWithSimilarValues =
   | 'Public limited company'
