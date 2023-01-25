@@ -59,7 +59,7 @@ function buildEnumKey(value: string) {
 
 function createOpenApi3Schema(definitions: any): Schema {
   return {
-    id: new SchemaId(''),
+    id: SchemaId.empty,
     type: 'Draft07',
     content: {
       definitions: dereferences(definitions),
