@@ -453,7 +453,7 @@ export function createSdkClient(options: SdkOptions) {
     },
     pets: {
       id: (id: number | string) => ({
-        get(query?: any, requestOptions?: RequestOptions): Promise<any> {
+        get(query?: any, requestOptions?: RequestOptions): Promise<types.Pet> {
           return requester.get(\`/pets/\${id}\`, query, requestOptions);
         },
         delete(data: any = {}, requestOptions?: RequestOptions): Promise<any> {
@@ -463,7 +463,10 @@ export function createSdkClient(options: SdkOptions) {
       get(query?: any, requestOptions?: RequestOptions): Promise<any> {
         return requester.get(\`/pets\`, query, requestOptions);
       },
-      post(data: any = {}, requestOptions?: RequestOptions): Promise<any> {
+      post(
+        data: types.NewPet,
+        requestOptions?: RequestOptions,
+      ): Promise<types.Pet> {
         return requester.post(\`/pets\`, data, requestOptions);
       },
     },
@@ -486,7 +489,7 @@ export interface NewPet {
   name: string;
   tag?: string;
 }
-export interface PetWithAllOf {
+export interface Pet {
   name: string;
   tag?: string;
   id: number; // int64
@@ -508,7 +511,7 @@ exports[`OpenAPI V3 Basic Scenario 3`] = `
 "export const schemas = {
   PetWithAnyOf: {} as any,
   PetWithOneOf: {} as any,
-  PetWithAllOf: {} as any,
+  Pet: {} as any,
   NewPet: {} as any,
   Error: {} as any,
 };
@@ -535,7 +538,7 @@ schemas.PetWithOneOf = Object.assign(schemas.PetWithOneOf, {
   ],
 });
 
-schemas.PetWithAllOf = Object.assign(schemas.PetWithAllOf, {
+schemas.Pet = Object.assign(schemas.Pet, {
   allOf: [
     schemas.NewPet,
     {

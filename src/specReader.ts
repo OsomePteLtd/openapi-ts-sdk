@@ -53,7 +53,7 @@ function readSpecFromFile(path: string, resultSpec: SdkSpec) {
   }
   const urls = Object.keys(sourceSpec.paths);
   for (const url of urls) {
-    addUrl(sourceSpec, url, resultSpec.methodsRoot, splitUrl(url));
+    addUrl(sourceSpec, url, resultSpec.methodsRoot, splitUrl(url), openApiVersion);
   }
   resultSpec.definitions = {
     ...resultSpec.definitions,
@@ -65,19 +65,19 @@ function splitUrl(url: string) {
   return url.replace(' (agent)', '').split('/').slice(1);
 }
 
-function addUrl(spec: any, url: string, parent: SdkNode, path: string[]) {
+function addUrl(spec: any, url: string, parent: SdkNode, path: string[], openApiVersion: OpenApiVersion) {
   if (path.length === 0) {
-    addMethods(spec, url, parent);
+    addMethods(spec, url, parent, openApiVersion);
     return;
   }
   const [head, ...tail] = path;
   if (!parent.children[head]) {
     parent.children[head] = createNode(parent, head);
   }
-  addUrl(spec, url, parent.children[head], tail);
+  addUrl(spec, url, parent.children[head], tail, openApiVersion);
 }
 
-function addMethods(spec: any, url: string, node: SdkNode) {
+function addMethods(spec: any, url: string, node: SdkNode, openApiVersion: OpenApiVersion) {
   const methodsSpec = spec.paths[url];
   const methods = Object.keys(methodsSpec);
   for (const method of methods) {
@@ -86,6 +86,7 @@ function addMethods(spec: any, url: string, node: SdkNode) {
       method,
       methodsSpec[method],
       spec,
+      openApiVersion,
     );
   }
 }
@@ -111,14 +112,15 @@ function createMethod(
   method: string,
   methodSpec: any,
   originalSpec: Record<string, any>,
+  openApiVersion: OpenApiVersion
 ): SdkMethod {
   const path = getMethodPath(node);
   return {
     node,
     method,
     path,
-    requestType: getRequestType(methodSpec, originalSpec, method, path),
-    responseType: getResponseType(methodSpec, originalSpec, method, path),
+    requestType: getRequestType(methodSpec, originalSpec, method, path, openApiVersion),
+    responseType: getResponseType(methodSpec, originalSpec, method, path, openApiVersion),
     queryType: getQueryType(methodSpec),
   };
 }
@@ -138,9 +140,16 @@ function getRequestType(
   originalSpec: Record<string, any>,
   method: string,
   path: string,
+  openApiVersion: OpenApiVersion,
 ) {
-  const { parameters } = methodSpec;
-  const body = (parameters || []).find((p: any) => p.name === 'body');
+  let body = undefined;
+  if (openApiVersion === OpenApiVersion.v2) {
+    const { parameters } = methodSpec;
+    body = (parameters || []).find((p: any) => p.name === 'body');
+  } else if (openApiVersion === OpenApiVersion.v3) {
+    const { requestBody } = methodSpec;
+    body = requestBody?.content['application/json'];
+  }
   if (!body) {
     return undefined;
   }
@@ -156,9 +165,15 @@ function getResponseType(
   originalSpec: Record<string, any>,
   method: string,
   path: string,
+  openApiVersion: OpenApiVersion,
 ) {
   const { responses } = methodSpec;
-  const schema = responses && responses['200'] && responses['200'].schema;
+  let schema = undefined;
+  if (openApiVersion === OpenApiVersion.v2){
+    schema = responses['200']?.schema;
+  } else if (openApiVersion === OpenApiVersion.v3) {
+    schema = responses['200']?.content['application/json']?.schema;
+  }
   if (!schema) {
     return undefined;
   }
