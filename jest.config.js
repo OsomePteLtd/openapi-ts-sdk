@@ -5,5 +5,7 @@ module.exports = {
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   verbose: true,
   testEnvironment: 'node',
-  testURL: 'http://localhost/', // https://github.com/jsdom/jsdom/issues/2304#issuecomment-408327115
+  testEnvironmentOptions: {
+    url: 'http://localhost/', // https://github.com/jsdom/jsdom/issues/2304#issuecomment-408327115
+  }
 };
