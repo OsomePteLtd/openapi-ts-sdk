@@ -27,7 +27,7 @@ export async function writeTypes(spec: SdkSpec, fileName: string) {
 // private
 
 function exportAllTypes(source: string) {
-  const regexp = /declare (.*)/gm;
+  const regexp = /^declare (.*)/gm;
   return source.replace(regexp, 'export $1');
 }
 
