@@ -144,14 +144,13 @@ it('Typed Schemas', async () => {
 });
 
 describe('OpenAPI V3', () => {
-
   it('Basic Scenario', async () => {
-    const { clientSource, typesSource, schemasSource } = await generateFromOpenApiSpecs({
-      files: [join(__dirname, 'assets', 'openapi-v3', 'petstore.json')]
-    });
+    const { clientSource, typesSource, schemasSource } =
+      await generateFromOpenApiSpecs({
+        files: [join(__dirname, 'assets', 'openapi-v3', 'petstore.json')],
+      });
     expect(clientSource).toMatchSnapshot();
     expect(typesSource).toMatchSnapshot();
     expect(schemasSource).toMatchSnapshot();
-  })
-
-})
+  });
+});

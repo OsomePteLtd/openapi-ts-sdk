@@ -1,4 +1,4 @@
-import {readFileSync} from 'fs'
+import { readFileSync } from 'fs';
 
 export enum OpenApiVersion {
   v2,
@@ -6,11 +6,11 @@ export enum OpenApiVersion {
 }
 
 export function getOpenApiVersion(files: string[]) {
-  const specs = files.map(path => JSON.parse(readFileSync(path, 'utf8')));
+  const specs = files.map((path) => JSON.parse(readFileSync(path, 'utf8')));
   const [firstSpec] = specs;
   const ver = getVersion(firstSpec);
   if (specs.some((spec) => getVersion(spec) !== ver)) {
-    throw new Error("Specifications should be the same version");
+    throw new Error('Specifications should be the same version');
   }
   return ver;
 }
@@ -20,7 +20,7 @@ export function isV2(ver: OpenApiVersion) {
 }
 
 export function isV3(ver: OpenApiVersion) {
-  return ver === OpenApiVersion.v3;;
+  return ver === OpenApiVersion.v3;
 }
 
 // private

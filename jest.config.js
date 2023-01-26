@@ -7,5 +7,5 @@ module.exports = {
   testEnvironment: 'node',
   testEnvironmentOptions: {
     url: 'http://localhost/', // https://github.com/jsdom/jsdom/issues/2304#issuecomment-408327115
-  }
+  },
 };
