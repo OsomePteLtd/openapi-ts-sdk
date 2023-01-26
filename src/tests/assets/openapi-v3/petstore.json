@@ -27,27 +27,11 @@
         "operationId": "findPets",
         "parameters": [
           {
-            "name": "tags",
+            "name": "...",
             "in": "query",
-            "description": "tags to filter by",
+            "description": "Schema: [`PetsGetRequestQuery`](#_petsgetrequestquery) (stringified)",
             "required": false,
-            "style": "form",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "maximum number of results to return",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
+            "style": "form"
           }
         ],
         "responses": {
@@ -278,6 +262,17 @@
             ]
           },
           "message": {
+            "type": "string"
+          }
+        }
+      },
+      "PetsGetRequestQuery": {
+        "type": "object",
+        "properties": {
+          "offset": {
+            "type": "string"
+          },
+          "limit": {
             "type": "string"
           }
         }

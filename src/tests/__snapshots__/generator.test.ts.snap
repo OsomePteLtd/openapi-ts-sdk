@@ -460,7 +460,10 @@ export function createSdkClient(options: SdkOptions) {
           return requester.delete(\`/pets/\${id}\`, data, requestOptions);
         },
       }),
-      get(query?: any, requestOptions?: RequestOptions): Promise<any> {
+      get(
+        query?: types.PetsGetRequestQuery,
+        requestOptions?: RequestOptions,
+      ): Promise<any> {
         return requester.get(\`/pets\`, query, requestOptions);
       },
       post(
@@ -504,6 +507,10 @@ export type PetWithOneOf =
   | {
       id: number; // int64
     };
+export interface PetsGetRequestQuery {
+  offset?: string;
+  limit?: string;
+}
 "
 `;
 
@@ -514,6 +521,7 @@ exports[`OpenAPI V3 Basic Scenario 3`] = `
   Pet: {} as any,
   NewPet: {} as any,
   Error: {} as any,
+  PetsGetRequestQuery: {} as any,
 };
 
 schemas.PetWithAnyOf = Object.assign(schemas.PetWithAnyOf, {
@@ -562,6 +570,11 @@ schemas.Error = Object.assign(schemas.Error, {
     code: { anyOf: [{ type: 'integer', format: 'int32' }, { type: 'string' }] },
     message: { type: 'string' },
   },
+});
+
+schemas.PetsGetRequestQuery = Object.assign(schemas.PetsGetRequestQuery, {
+  type: 'object',
+  properties: { offset: { type: 'string' }, limit: { type: 'string' } },
 });
 
 Object.keys(schemas).forEach((name) => {
