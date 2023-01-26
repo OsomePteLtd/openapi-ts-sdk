@@ -10,20 +10,29 @@ export async function generateSdk(options: {
   specFiles: string[];
   outDir: string;
   prefix?: string;
+  typedSchemas?: boolean;
 }) {
-  const { specFiles, outDir, prefix } = options;
+  const { specFiles, outDir, prefix, typedSchemas } = options;
   const spec = readSpecFromFiles(specFiles);
   copyTemplate(outDir);
   await writeClient(spec, join(outDir, 'client.ts'));
   await writeTypes(spec, join(outDir, 'types.ts'));
-  await writeSchemas({ spec, fileName: join(outDir, 'schemas.ts'), prefix });
+  await writeSchemas({
+    spec,
+    fileName: join(outDir, 'schemas.ts'),
+    prefix,
+    typedSchemas,
+  });
 }
 
 // private
+const filesToIgnore = ['sdkClient.ts'];
 
 function copyTemplate(outDir: string) {
   const templateDir = join(__dirname, '..', 'template');
-  const files = fs.readdirSync(templateDir);
+  const files = fs
+    .readdirSync(templateDir)
+    .filter((file) => !filesToIgnore.includes(file));
   for (const file of files) {
     fs.copyFileSync(join(templateDir, file), join(outDir, file));
   }
