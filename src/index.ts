@@ -26,6 +26,7 @@ export async function generateSdk(options: {
 }
 
 // private
+
 const filesToIgnore = ['sdkClient.ts'];
 
 function copyTemplate(outDir: string) {

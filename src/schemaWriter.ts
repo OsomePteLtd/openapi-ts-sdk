@@ -52,8 +52,8 @@ export async function writeSchemas(options: {
 
 function deref(input: string) {
   return input.replace(
-    /{"\$ref":"#\/definitions\/(.+?)"}/gm,
-    (fullMatch, name) => {
+    /{"\$ref":"#\/(definitions|components\/schemas)\/(.+?)"}/gm,
+    (fullMatch, _, name) => {
       return isNameValid(name) ? `schemas.${name}` : fullMatch;
     },
   );

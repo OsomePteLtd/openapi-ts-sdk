@@ -17,9 +17,9 @@
   },
   "dependencies": {
     "commander": "^6.2.1",
+    "dtsgenerator": "^3.16.2",
     "lodash": "^4.17.15",
-    "prettier": "^2.3.0",
-    "sw2dts": "^2.6.2"
+    "prettier": "^2.3.0"
   },
   "devDependencies": {
     "@types/jest": "^29.4.0",

@@ -49,6 +49,29 @@ export async function generate(options: {
   return { clientSource, typesSource, schemasSource };
 }
 
+export async function generateFromOpenApiSpecs(options: {
+  files: string[];
+  prefix?: string;
+  typedSchemas?: boolean;
+}) {
+  const { files, prefix, typedSchemas } = options;
+  const tmpDirResult = tmp.dirSync({ unsafeCleanup: true });
+  await generateSdk({
+    specFiles: [...files],
+    outDir: tmpDirResult.name,
+    prefix,
+    typedSchemas,
+  });
+  const clientPath = join(tmpDirResult.name, 'client.ts');
+  const typesPath = join(tmpDirResult.name, 'types.ts');
+  const schemasPath = join(tmpDirResult.name, 'schemas.ts');
+  const clientSource = fs.readFileSync(clientPath, 'utf8');
+  const typesSource = fs.readFileSync(typesPath, 'utf8');
+  const schemasSource = fs.readFileSync(schemasPath, 'utf8');
+  tmpDirResult.removeCallback();
+  return { clientSource, typesSource, schemasSource };
+}
+
 // private
 
 function trimLines(input: string) {
