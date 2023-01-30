@@ -13,7 +13,8 @@
     "prebuild": "node scripts/parseSdkTemplate.js",
     "test": "jest",
     "test:ci": "jest --ci",
-    "test:updateSnapshots": "jest -u"
+    "test:updateSnapshots": "jest -u",
+    "prepublish": "npm run build"
   },
   "dependencies": {
     "commander": "^6.2.1",
