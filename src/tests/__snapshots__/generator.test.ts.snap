@@ -583,6 +583,106 @@ Object.keys(schemas).forEach((name) => {
 "
 `;
 
+exports[`OpenAPI V3_1 Basic Scenario 1`] = `
+"import axios, { AxiosRequestConfig, AxiosError } from 'axios';
+
+import { RequestOptions, SdkOptions } from './options';
+import { SdkRequester } from './requester';
+import * as types from './types';
+
+export function createSdkClient(options: SdkOptions) {
+  const requester = new SdkRequester(options);
+  return {
+    setAuthToken(authToken: string | undefined | null) {
+      requester.setAuthToken(authToken);
+    },
+    setErrorHandler(handler: (error: AxiosError) => void) {
+      requester.setErrorHandler(handler);
+    },
+    setInterceptors(
+      interceptors: Parameters<typeof requester.setInterceptors>[0],
+    ) {
+      requester.setInterceptors(interceptors);
+    },
+    get(path: string, query?: object, requestOptions?: RequestOptions) {
+      return requester.get(path, query, requestOptions);
+    },
+    post(path: string, data?: object, requestOptions?: RequestOptions) {
+      return requester.post(path, data, requestOptions);
+    },
+    put(path: string, data?: object, requestOptions?: RequestOptions) {
+      return requester.put(path, data, requestOptions);
+    },
+    patch(path: string, data?: object, requestOptions?: RequestOptions) {
+      return requester.patch(path, data, requestOptions);
+    },
+    delete(path: string, data?: object, requestOptions?: RequestOptions) {
+      return requester.delete(path, data, requestOptions);
+    },
+    request(options: AxiosRequestConfig) {
+      return requester.request(options);
+    },
+  };
+}
+
+export type SdkClient = ReturnType<typeof createSdkClient>;
+
+export const CancelToken = axios.CancelToken;
+export const isCancel = axios.isCancel;
+"
+`;
+
+exports[`OpenAPI V3_1 Basic Scenario 2`] = `
+"export interface Model {
+  /**
+   * type 'null'
+   */
+  two?: null;
+  /**
+   * nullable string
+   */
+  ten?: string | null;
+}
+export type ModelWithNullableRef =
+  | Model
+  | null
+  | {
+      model?: Model | null;
+    };
+"
+`;
+
+exports[`OpenAPI V3_1 Basic Scenario 3`] = `
+"export const schemas = {
+  modelWithNullableRef: {} as any,
+  model: {} as any,
+};
+
+schemas.modelWithNullableRef = Object.assign(schemas.modelWithNullableRef, {
+  anyOf: [
+    schemas.model,
+    { type: 'null' },
+    {
+      type: 'object',
+      properties: { model: { anyOf: [schemas.model, { type: 'null' }] } },
+    },
+  ],
+});
+
+schemas.model = Object.assign(schemas.model, {
+  type: 'object',
+  properties: {
+    two: { description: "type 'null'", type: 'null' },
+    ten: { description: 'nullable string', type: ['string', 'null'] },
+  },
+});
+
+Object.keys(schemas).forEach((name) => {
+  schemas[name as keyof typeof schemas].$id = 'default_' + name;
+});
+"
+`;
+
 exports[`Schema Prefix 1`] = `
 "export const schemas = {
   User: {} as any,

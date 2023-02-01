@@ -1,7 +1,7 @@
 import fs from 'fs';
 
 import { pascalCase } from './helpers';
-import { getOpenApiVersion, isV2, isV3, OpenApiVersion } from './specVersion';
+import { getOpenApiVersion, isV2, isV3, isV3_1, OpenApiVersion } from './specVersion';
 
 export interface SdkSpec {
   methodsRoot: SdkNode;
@@ -45,7 +45,7 @@ function readSpecFromFile(path: string, resultSpec: SdkSpec) {
   const { openApiVersion } = resultSpec;
   const json = fs.readFileSync(path, 'utf8');
   const sourceSpec = JSON.parse(json);
-  if (isV3(openApiVersion)) {
+  if (isV3(openApiVersion) || isV3_1(openApiVersion)) {
     sourceSpec.definitions = sourceSpec.components.schemas;
     delete sourceSpec['components'];
   }
@@ -173,7 +173,7 @@ function getRequestType(
   if (isV2(openApiVersion)) {
     const { parameters } = methodSpec;
     body = (parameters || []).find((p: any) => p.name === 'body');
-  } else if (isV3(openApiVersion)) {
+  } else if (isV3(openApiVersion) || isV3_1(openApiVersion)) {
     const { requestBody } = methodSpec;
     body = requestBody?.content['application/json'];
   }
@@ -198,7 +198,7 @@ function getResponseType(
   let schema = undefined;
   if (isV2(openApiVersion)) {
     schema = responses['200']?.schema;
-  } else if (isV3(openApiVersion)) {
+  } else if (isV3(openApiVersion) || isV3_1(openApiVersion)) {
     schema = responses['200']?.content['application/json']?.schema;
   }
   if (!schema) {

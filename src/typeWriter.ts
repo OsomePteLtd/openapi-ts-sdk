@@ -4,23 +4,24 @@ import { camelCase, uniq } from 'lodash';
 import { format } from './formatter';
 import { SdkSpec } from './specReader';
 import { clone } from './helpers';
-import dtsgenerator, { SchemaId, Schema } from 'dtsgenerator';
-import { isV2, isV3 } from './specVersion';
+import dtsgenerator, { SchemaId, Schema, SchemaType } from 'dtsgenerator';
+import { isV2, isV3, isV3_1 } from './specVersion';
 
 export async function writeTypes(spec: SdkSpec, fileName: string) {
   const { openApiVersion } = spec;
   const definitions = clone(spec.definitions);
-  let tsTypes = '';
+  const contents: Schema[] = [];
   if (isV2(openApiVersion)) {
-    tsTypes = await dtsgenerator({
-      contents: [createOpenApi2Schema(definitions)],
-    });
+    contents.push(createOpenApiSchema(definitions, 'Draft04', 'id'));
   } else if (isV3(openApiVersion)) {
-    tsTypes = await dtsgenerator({
-      contents: [createOpenApi3Schema(definitions)],
-    });
+    contents.push(createOpenApiSchema(definitions, 'Draft07', '$id'));
+  } else if (isV3_1(openApiVersion)) {
+    contents.push(createOpenApiSchema(definitions, '2020-12', '$id'));
   }
-  tsTypes = exportAllTypes(tsTypes);
+  const dtsTypes = await dtsgenerator({
+    contents,
+  });
+  const tsTypes = dts2ts(dtsTypes);
   const postProcessed = processEnums(tsTypes);
   const formatted = await format(postProcessed);
   fs.writeFileSync(fileName, formatted);
@@ -28,7 +29,7 @@ export async function writeTypes(spec: SdkSpec, fileName: string) {
 
 // private
 
-function exportAllTypes(source: string) {
+function dts2ts(source: string) {
   const regexp = /^declare (.*)/gm;
   return source.replace(regexp, 'export $1');
 }
@@ -59,22 +60,12 @@ function buildEnumKey(value: string) {
   return camelCase(value) || 'empty';
 }
 
-function createOpenApi2Schema(definitions: any): Schema {
+function createOpenApiSchema(definitions: any, schemaType: SchemaType, idKey: '$id' | 'id'): Schema {
   return {
     id: SchemaId.empty,
-    type: 'Draft04',
+    type: schemaType,
     content: {
-      definitions: dereferences(definitions, 'id'),
-    } as any,
-  };
-}
-
-function createOpenApi3Schema(definitions: any): Schema {
-  return {
-    id: SchemaId.empty,
-    type: 'Draft07',
-    content: {
-      definitions: dereferences(definitions, '$id'),
+      definitions: dereferences(definitions, idKey),
     } as any,
   };
 }

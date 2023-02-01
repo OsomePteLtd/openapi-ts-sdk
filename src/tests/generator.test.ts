@@ -154,3 +154,15 @@ describe('OpenAPI V3', () => {
     expect(schemasSource).toMatchSnapshot();
   });
 });
+
+describe('OpenAPI V3_1', () => {
+  it('Basic Scenario', async () => {
+    const { clientSource, typesSource, schemasSource } =
+      await generateFromOpenApiSpecs({
+        files: [join(__dirname, 'assets', 'openapi-v3_1', 'schema.json')],
+      });
+    expect(clientSource).toMatchSnapshot();
+    expect(typesSource).toMatchSnapshot();
+    expect(schemasSource).toMatchSnapshot();
+  });
+});

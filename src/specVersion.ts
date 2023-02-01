@@ -3,6 +3,7 @@ import { readFileSync } from 'fs';
 export enum OpenApiVersion {
   v2,
   v3,
+  v3_1
 }
 
 export function getOpenApiVersion(files: string[]) {
@@ -21,6 +22,10 @@ export function isV2(ver: OpenApiVersion) {
 
 export function isV3(ver: OpenApiVersion) {
   return ver === OpenApiVersion.v3;
+}
+
+export function isV3_1(ver: OpenApiVersion) {
+  return ver === OpenApiVersion.v3_1;
 }
 
 // private
@@ -42,6 +47,9 @@ function parseVersion(input: string) {
   }
   if (verWithoutMinor === '3.0') {
     return OpenApiVersion.v3;
+  }
+  if (verWithoutMinor === '3.1') {
+    return OpenApiVersion.v3_1;
   }
   throw new Error(`OpenApi version: ${verWithoutMinor} is unsupported`);
 }
