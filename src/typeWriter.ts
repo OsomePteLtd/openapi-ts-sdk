@@ -60,7 +60,11 @@ function buildEnumKey(value: string) {
   return camelCase(value) || 'empty';
 }
 
-function createOpenApiSchema(definitions: any, schemaType: SchemaType, idKey: '$id' | 'id'): Schema {
+function createOpenApiSchema(
+  definitions: any,
+  schemaType: SchemaType,
+  idKey: '$id' | 'id',
+): Schema {
   return {
     id: SchemaId.empty,
     type: schemaType,

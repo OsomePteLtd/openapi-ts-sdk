@@ -1,7 +1,13 @@
 import fs from 'fs';
 
 import { pascalCase } from './helpers';
-import { getOpenApiVersion, isV2, isV3, isV3_1, OpenApiVersion } from './specVersion';
+import {
+  getOpenApiVersion,
+  isV2,
+  isV3,
+  isV3_1,
+  OpenApiVersion,
+} from './specVersion';
 
 export interface SdkSpec {
   methodsRoot: SdkNode;

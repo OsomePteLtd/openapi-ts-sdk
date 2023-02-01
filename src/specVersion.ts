@@ -3,7 +3,7 @@ import { readFileSync } from 'fs';
 export enum OpenApiVersion {
   v2,
   v3,
-  v3_1
+  v3_1,
 }
 
 export function getOpenApiVersion(files: string[]) {

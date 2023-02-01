@@ -41,10 +41,7 @@
           },
           "ten": {
             "description": "nullable string",
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": ["string", "null"]
           }
         }
       }
