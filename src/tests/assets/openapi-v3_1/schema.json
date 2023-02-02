@@ -1,0 +1,50 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "API",
+    "version": "1.0.0"
+  },
+  "paths": {},
+  "components": {
+    "schemas": {
+      "modelWithNullableRef": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/model"
+          },
+          {
+            "type": "null"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "model": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/model"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "model": {
+        "type": "object",
+        "properties": {
+          "two": {
+            "description": "type 'null'",
+            "type": "null"
+          },
+          "ten": {
+            "description": "nullable string",
+            "type": ["string", "null"]
+          }
+        }
+      }
+    }
+  }
+}
