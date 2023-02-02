@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - "v*.*.*"
   pull_request:
     branches:
       - master
@@ -19,7 +19,7 @@ jobs:
         with:
           access_token: ${{ github.token }}
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.ref }}
 
@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.ref }}
 
@@ -62,7 +62,7 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.ref }}
 
@@ -88,7 +88,7 @@ jobs:
 
     steps:
       - name: Load current commit
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: ${{ github.ref }}
 
@@ -109,7 +109,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ steps.read-nvmrc.outputs.version }}
-          registry-url: 'https://registry.npmjs.org'
+          registry-url: "https://registry.npmjs.org"
 
       - name: Publish package
         run: npm publish --access public

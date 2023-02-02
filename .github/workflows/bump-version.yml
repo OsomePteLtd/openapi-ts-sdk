@@ -7,13 +7,13 @@ on:
 
 jobs:
   bump-version:
-    name: 'Bump minor version'
+    name: "Bump minor version"
     runs-on: ubuntu-20.04
     if: github.actor != 'osome-bot'
 
     steps:
       - name: Load current commit
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           token: ${{ secrets.OSOME_BOT_TOKEN }}
 
