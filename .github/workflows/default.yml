@@ -92,11 +92,6 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
-      - name: Read nvmrc
-        id: read-nvmrc
-        run: echo "::set-output name=version::$(cat .nvmrc)"
-        shell: bash
-
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
