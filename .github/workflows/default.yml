@@ -92,8 +92,13 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
+      - name: Read nvmrc
+        id: read-nvmrc
+        run: echo "version=$(cat .nvmrc)" >> $GITHUB_OUTPUT
+        shell: bash
+
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ steps.read-nvmrc.outputs.version }}
 
@@ -101,7 +106,7 @@ jobs:
         run: npm ci
 
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ steps.read-nvmrc.outputs.version }}
           registry-url: 'https://registry.npmjs.org'
