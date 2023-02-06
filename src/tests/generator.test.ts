@@ -23,7 +23,7 @@ it('Basic Scenario', async () => {
   `;
   const models = `
     SuccessResponse { success: b }
-    Company { id: i, name: s, size: i }
+    Company { id: i, name: s, size: i, meta?: o }
     CompanyNew { name: s, size: i }
     CompanyUpdate { name?: s, size?: i }
     CompanyQuery { page?: i, perPage?: i }

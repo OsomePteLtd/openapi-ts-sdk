@@ -42,6 +42,10 @@
           "ten": {
             "description": "nullable string",
             "type": ["string", "null"]
+          },
+          "meta": {
+            "description": "empty object",
+            "type": "object"
           }
         }
       }

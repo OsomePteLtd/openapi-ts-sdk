@@ -206,6 +206,7 @@ export interface Company {
   id: number;
   name: string;
   size: number;
+  meta?: {};
 }
 export interface CompanyNew {
   name: string;
@@ -259,6 +260,7 @@ schemas.Company = Object.assign(schemas.Company, {
     id: { type: 'integer' },
     name: { type: 'string' },
     size: { type: 'integer' },
+    meta: { type: 'object' },
   },
   required: ['id', 'name', 'size'],
 });
@@ -642,6 +644,10 @@ exports[`OpenAPI V3_1 Basic Scenario 2`] = `
    * nullable string
    */
   ten?: string | null;
+  /**
+   * empty object
+   */
+  meta?: {};
 }
 export type ModelWithNullableRef =
   | Model
@@ -674,6 +680,7 @@ schemas.model = Object.assign(schemas.model, {
   properties: {
     two: { description: "type 'null'", type: 'null' },
     ten: { description: 'nullable string', type: ['string', 'null'] },
+    meta: { description: 'empty object', type: 'object' },
   },
 });
 
