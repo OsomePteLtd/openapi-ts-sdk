@@ -10,19 +10,22 @@ import { isV2, isV3, isV3_1 } from './specVersion';
 export async function writeTypes(spec: SdkSpec, fileName: string) {
   const { openApiVersion } = spec;
   const definitions = clone(spec.definitions);
-  const contents: Schema[] = [];
+  let dtsTypes = '';
   if (isV2(openApiVersion)) {
-    contents.push(createOpenApiSchema(definitions, 'Draft04', 'id'));
+    dtsTypes = await dtsgenerator({
+      contents: [createOpenApiSchema(definitions, 'Draft04', 'id')]
+    });
   } else if (isV3(openApiVersion)) {
-    contents.push(createOpenApiSchema(definitions, 'Draft07', '$id'));
+    dtsTypes = await dtsgenerator({
+      contents: [createOpenApiSchema(definitions, 'Draft07', '$id')]
+    });
   } else if (isV3_1(openApiVersion)) {
-    contents.push(createOpenApiSchema(definitions, '2020-12', '$id'));
+    dtsTypes = await dtsgenerator({
+      contents: [createOpenApiSchema(definitions, '2020-12', '$id')]
+    });
   }
-  const dtsTypes = await dtsgenerator({
-    contents,
-  });
   const tsTypes = dts2ts(dtsTypes);
-  const postProcessed = processEnums(tsTypes);
+  const postProcessed = processEnums(processObjectInterfaces(tsTypes));
   const formatted = await format(postProcessed);
   fs.writeFileSync(fileName, formatted);
 }
@@ -32,6 +35,11 @@ export async function writeTypes(spec: SdkSpec, fileName: string) {
 function dts2ts(source: string) {
   const regexp = /^declare (.*)/gm;
   return source.replace(regexp, 'export $1');
+}
+
+function processObjectInterfaces(source: string) {
+  const regexp = /\{\s*\[key: string\]: any;\s*\}/gm;
+  return source.replace(regexp, '{}');
 }
 
 function processEnums(source: string) {
