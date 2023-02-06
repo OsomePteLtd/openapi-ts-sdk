@@ -13,15 +13,15 @@ export async function writeTypes(spec: SdkSpec, fileName: string) {
   let dtsTypes = '';
   if (isV2(openApiVersion)) {
     dtsTypes = await dtsgenerator({
-      contents: [createOpenApiSchema(definitions, 'Draft04', 'id')]
+      contents: [createOpenApiSchema(definitions, 'Draft04', 'id')],
     });
   } else if (isV3(openApiVersion)) {
     dtsTypes = await dtsgenerator({
-      contents: [createOpenApiSchema(definitions, 'Draft07', '$id')]
+      contents: [createOpenApiSchema(definitions, 'Draft07', '$id')],
     });
   } else if (isV3_1(openApiVersion)) {
     dtsTypes = await dtsgenerator({
-      contents: [createOpenApiSchema(definitions, '2020-12', '$id')]
+      contents: [createOpenApiSchema(definitions, '2020-12', '$id')],
     });
   }
   const tsTypes = dts2ts(dtsTypes);
