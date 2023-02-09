@@ -71,15 +71,25 @@ export type SdkClient = ReturnType<typeof createSdkClient>;
 export const CancelToken = axios.CancelToken;
 export const isCancel = axios.isCancel;
 
+type ProxyPathParameter<
+  Key extends string,
+  T extends { [K in Key]: (...args: any) => any },
+> = T & T[Key] & { [key: string]: T[Key] };
+
 function proxyPathParameter<
   Key extends string,
   T extends { [K in Key]: (...args: any) => any },
->(key: Key, node: T): T & T[Key] {
-  return new Proxy(node, {
-    apply(target, thisArg, argArray) {
-      return Reflect.apply(node[key], thisArg, argArray);
+>(key: Key, node: T): ProxyPathParameter<Key, T> {
+  const handler = node[key];
+  return new Proxy(handler, {
+    get(target, p) {
+      if (Object.hasOwnProperty.call(node, p)) {
+        return (node as any)[p];
+      }
+
+      return handler;
     },
-  }) as T & T[Key];
+  }) as ProxyPathParameter<Key, T>;
 }
 "
 `;
@@ -206,15 +216,25 @@ export type SdkClient = ReturnType<typeof createSdkClient>;
 export const CancelToken = axios.CancelToken;
 export const isCancel = axios.isCancel;
 
+type ProxyPathParameter<
+  Key extends string,
+  T extends { [K in Key]: (...args: any) => any },
+> = T & T[Key] & { [key: string]: T[Key] };
+
 function proxyPathParameter<
   Key extends string,
   T extends { [K in Key]: (...args: any) => any },
->(key: Key, node: T): T & T[Key] {
-  return new Proxy(node, {
-    apply(target, thisArg, argArray) {
-      return Reflect.apply(node[key], thisArg, argArray);
+>(key: Key, node: T): ProxyPathParameter<Key, T> {
+  const handler = node[key];
+  return new Proxy(handler, {
+    get(target, p) {
+      if (Object.hasOwnProperty.call(node, p)) {
+        return (node as any)[p];
+      }
+
+      return handler;
     },
-  }) as T & T[Key];
+  }) as ProxyPathParameter<Key, T>;
 }
 "
 `;
@@ -393,15 +413,25 @@ export type SdkClient = ReturnType<typeof createSdkClient>;
 export const CancelToken = axios.CancelToken;
 export const isCancel = axios.isCancel;
 
+type ProxyPathParameter<
+  Key extends string,
+  T extends { [K in Key]: (...args: any) => any },
+> = T & T[Key] & { [key: string]: T[Key] };
+
 function proxyPathParameter<
   Key extends string,
   T extends { [K in Key]: (...args: any) => any },
->(key: Key, node: T): T & T[Key] {
-  return new Proxy(node, {
-    apply(target, thisArg, argArray) {
-      return Reflect.apply(node[key], thisArg, argArray);
+>(key: Key, node: T): ProxyPathParameter<Key, T> {
+  const handler = node[key];
+  return new Proxy(handler, {
+    get(target, p) {
+      if (Object.hasOwnProperty.call(node, p)) {
+        return (node as any)[p];
+      }
+
+      return handler;
     },
-  }) as T & T[Key];
+  }) as ProxyPathParameter<Key, T>;
 }
 "
 `;
@@ -516,15 +546,25 @@ export type SdkClient = ReturnType<typeof createSdkClient>;
 export const CancelToken = axios.CancelToken;
 export const isCancel = axios.isCancel;
 
+type ProxyPathParameter<
+  Key extends string,
+  T extends { [K in Key]: (...args: any) => any },
+> = T & T[Key] & { [key: string]: T[Key] };
+
 function proxyPathParameter<
   Key extends string,
   T extends { [K in Key]: (...args: any) => any },
->(key: Key, node: T): T & T[Key] {
-  return new Proxy(node, {
-    apply(target, thisArg, argArray) {
-      return Reflect.apply(node[key], thisArg, argArray);
+>(key: Key, node: T): ProxyPathParameter<Key, T> {
+  const handler = node[key];
+  return new Proxy(handler, {
+    get(target, p) {
+      if (Object.hasOwnProperty.call(node, p)) {
+        return (node as any)[p];
+      }
+
+      return handler;
     },
-  }) as T & T[Key];
+  }) as ProxyPathParameter<Key, T>;
 }
 "
 `;
@@ -676,15 +716,25 @@ export type SdkClient = ReturnType<typeof createSdkClient>;
 export const CancelToken = axios.CancelToken;
 export const isCancel = axios.isCancel;
 
+type ProxyPathParameter<
+  Key extends string,
+  T extends { [K in Key]: (...args: any) => any },
+> = T & T[Key] & { [key: string]: T[Key] };
+
 function proxyPathParameter<
   Key extends string,
   T extends { [K in Key]: (...args: any) => any },
->(key: Key, node: T): T & T[Key] {
-  return new Proxy(node, {
-    apply(target, thisArg, argArray) {
-      return Reflect.apply(node[key], thisArg, argArray);
+>(key: Key, node: T): ProxyPathParameter<Key, T> {
+  const handler = node[key];
+  return new Proxy(handler, {
+    get(target, p) {
+      if (Object.hasOwnProperty.call(node, p)) {
+        return (node as any)[p];
+      }
+
+      return handler;
     },
-  }) as T & T[Key];
+  }) as ProxyPathParameter<Key, T>;
 }
 "
 `;
