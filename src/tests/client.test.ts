@@ -48,7 +48,7 @@ it('supports proxied path parameters', () => {
   );
 });
 
-it('treats any unknown path segment as path parameter', () => {
+it('treats any whitelisted unknown path segment as path parameter', () => {
   return import(join(tmpDirResult.name, 'client.ts')).then(
     async ({ createSdkClient }) => {
       const baseUrl = 'https://example.com';
@@ -74,6 +74,19 @@ it("doesn't treat known path segments as path parameters", () => {
       await sdkClient.pets.get(1);
 
       expect(getNock.isDone()).toBeTruthy();
+    },
+  );
+});
+
+it('throws on not whitelisted unknown path segments', () => {
+  return import(join(tmpDirResult.name, 'client.ts')).then(
+    async ({ createSdkClient }) => {
+      const baseUrl = 'https://example.com';
+      const sdkClient = createSdkClient({ baseUrl });
+
+      expect(() => sdkClient.pets.notWhitelisted(1).get()).toThrowError(
+        'Path segment "notWhitelisted" does not exist',
+      );
     },
   );
 });
