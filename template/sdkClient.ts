@@ -48,7 +48,7 @@ export const isCancel = axios.isCancel;
 type ProxyPathParameter<
   Key extends string,
   T extends { [K in Key]: (...args: any) => any },
-> = T & T[Key] & { [K in `${string}${'id' | 'Id' | 'ID'}`]: T[Key] };
+> = T & T[Key] & { [K in \`\${string}\${'id' | 'Id' | 'ID'}\`]: T[Key] };
 
 function proxyPathParameter<
   Key extends string,
@@ -67,7 +67,7 @@ function proxyPathParameter<
         !p.endsWith('Id') &&
         !p.endsWith('ID')
       ) {
-        throw new Error(`Path segment "${p}" does not exist`);
+        throw new Error(\`Path segment "\${p}" does not exist\`);
       }
 
       return handler;
