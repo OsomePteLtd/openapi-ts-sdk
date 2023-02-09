@@ -41,7 +41,7 @@ function writeRegularNode(spec: SdkSpec, lines: string[], node: SdkNode) {
   lines.push(
     `${node.name}: ${
       pathParameterToProxy
-        ? `proxyPathPatameter('${pathParameterToProxy.slice(1, -1)}', `
+        ? `proxyPathParameter('${pathParameterToProxy.slice(1, -1)}', `
         : ''
     }{`,
   );
