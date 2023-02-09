@@ -44,3 +44,14 @@ export type SdkClient = ReturnType<typeof createSdkClient>;
 
 export const CancelToken = axios.CancelToken;
 export const isCancel = axios.isCancel;
+
+function proxyPathParameter<
+  Key extends string,
+  T extends { [K in Key]: (...args: any) => any },
+>(key: Key, node: T): T & T[Key] {
+  return new Proxy(node, {
+    apply(target, thisArg, argArray) {
+      return Reflect.apply(node[key], thisArg, argArray);
+    },
+  }) as T & T[Key];
+}

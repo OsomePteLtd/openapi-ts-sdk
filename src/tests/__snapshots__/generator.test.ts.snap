@@ -40,7 +40,7 @@ export function createSdkClient(options: SdkOptions) {
       return requester.request(options);
     },
     billing: {
-      invoices: {
+      invoices: proxyPathPatameter('id', {
         id: (id: number | string) => ({
           get(
             query?: any,
@@ -53,7 +53,7 @@ export function createSdkClient(options: SdkOptions) {
             );
           },
         }),
-      },
+      }),
     },
     companies: {
       post(
@@ -70,6 +70,17 @@ export type SdkClient = ReturnType<typeof createSdkClient>;
 
 export const CancelToken = axios.CancelToken;
 export const isCancel = axios.isCancel;
+
+function proxifyPathParameter<
+  Key extends string,
+  T extends { [K in Key]: (...args: any) => any },
+>(key: Key, node: T): T & T[Key] {
+  return new Proxy(node, {
+    apply(target, thisArg, argArray) {
+      return Reflect.apply(node[key], thisArg, argArray);
+    },
+  }) as T & T[Key];
+}
 "
 `;
 
@@ -141,7 +152,7 @@ export function createSdkClient(options: SdkOptions) {
     request(options: AxiosRequestConfig) {
       return requester.request(options);
     },
-    companies: {
+    companies: proxyPathPatameter('id', {
       id: (id: number | string) => ({
         archive: {
           post(
@@ -186,7 +197,7 @@ export function createSdkClient(options: SdkOptions) {
       ): Promise<types.CompanyResponse> {
         return requester.post(\`/companies\`, data, requestOptions);
       },
-    },
+    }),
   };
 }
 
@@ -194,6 +205,17 @@ export type SdkClient = ReturnType<typeof createSdkClient>;
 
 export const CancelToken = axios.CancelToken;
 export const isCancel = axios.isCancel;
+
+function proxifyPathParameter<
+  Key extends string,
+  T extends { [K in Key]: (...args: any) => any },
+>(key: Key, node: T): T & T[Key] {
+  return new Proxy(node, {
+    apply(target, thisArg, argArray) {
+      return Reflect.apply(node[key], thisArg, argArray);
+    },
+  }) as T & T[Key];
+}
 "
 `;
 
@@ -353,7 +375,7 @@ export function createSdkClient(options: SdkOptions) {
     request(options: AxiosRequestConfig) {
       return requester.request(options);
     },
-    user_roles: {
+    user_roles: proxyPathPatameter('role_id', {
       role_id: (role_id: number | string) => ({
         get(
           query?: any,
@@ -362,7 +384,7 @@ export function createSdkClient(options: SdkOptions) {
           return requester.get(\`/user-roles/\${role_id}\`, query, requestOptions);
         },
       }),
-    },
+    }),
   };
 }
 
@@ -370,6 +392,17 @@ export type SdkClient = ReturnType<typeof createSdkClient>;
 
 export const CancelToken = axios.CancelToken;
 export const isCancel = axios.isCancel;
+
+function proxifyPathParameter<
+  Key extends string,
+  T extends { [K in Key]: (...args: any) => any },
+>(key: Key, node: T): T & T[Key] {
+  return new Proxy(node, {
+    apply(target, thisArg, argArray) {
+      return Reflect.apply(node[key], thisArg, argArray);
+    },
+  }) as T & T[Key];
+}
 "
 `;
 
@@ -453,7 +486,7 @@ export function createSdkClient(options: SdkOptions) {
     request(options: AxiosRequestConfig) {
       return requester.request(options);
     },
-    pets: {
+    pets: proxyPathPatameter('id', {
       id: (id: number | string) => ({
         get(query?: any, requestOptions?: RequestOptions): Promise<types.Pet> {
           return requester.get(\`/pets/\${id}\`, query, requestOptions);
@@ -474,7 +507,7 @@ export function createSdkClient(options: SdkOptions) {
       ): Promise<types.Pet> {
         return requester.post(\`/pets\`, data, requestOptions);
       },
-    },
+    }),
   };
 }
 
@@ -482,6 +515,17 @@ export type SdkClient = ReturnType<typeof createSdkClient>;
 
 export const CancelToken = axios.CancelToken;
 export const isCancel = axios.isCancel;
+
+function proxifyPathParameter<
+  Key extends string,
+  T extends { [K in Key]: (...args: any) => any },
+>(key: Key, node: T): T & T[Key] {
+  return new Proxy(node, {
+    apply(target, thisArg, argArray) {
+      return Reflect.apply(node[key], thisArg, argArray);
+    },
+  }) as T & T[Key];
+}
 "
 `;
 
@@ -631,6 +675,17 @@ export type SdkClient = ReturnType<typeof createSdkClient>;
 
 export const CancelToken = axios.CancelToken;
 export const isCancel = axios.isCancel;
+
+function proxifyPathParameter<
+  Key extends string,
+  T extends { [K in Key]: (...args: any) => any },
+>(key: Key, node: T): T & T[Key] {
+  return new Proxy(node, {
+    apply(target, thisArg, argArray) {
+      return Reflect.apply(node[key], thisArg, argArray);
+    },
+  }) as T & T[Key];
+}
 "
 `;
 
