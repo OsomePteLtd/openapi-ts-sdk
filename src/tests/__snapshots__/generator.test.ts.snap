@@ -40,7 +40,7 @@ export function createSdkClient(options: SdkOptions) {
       return requester.request(options);
     },
     billing: {
-      invoices: proxyPathPatameter('id', {
+      invoices: proxyPathParameter('id', {
         id: (id: number | string) => ({
           get(
             query?: any,
@@ -152,7 +152,7 @@ export function createSdkClient(options: SdkOptions) {
     request(options: AxiosRequestConfig) {
       return requester.request(options);
     },
-    companies: proxyPathPatameter('id', {
+    companies: proxyPathParameter('id', {
       id: (id: number | string) => ({
         archive: {
           post(
@@ -375,7 +375,7 @@ export function createSdkClient(options: SdkOptions) {
     request(options: AxiosRequestConfig) {
       return requester.request(options);
     },
-    user_roles: proxyPathPatameter('role_id', {
+    user_roles: proxyPathParameter('role_id', {
       role_id: (role_id: number | string) => ({
         get(
           query?: any,
@@ -486,7 +486,7 @@ export function createSdkClient(options: SdkOptions) {
     request(options: AxiosRequestConfig) {
       return requester.request(options);
     },
-    pets: proxyPathPatameter('id', {
+    pets: proxyPathParameter('id', {
       id: (id: number | string) => ({
         get(query?: any, requestOptions?: RequestOptions): Promise<types.Pet> {
           return requester.get(\`/pets/\${id}\`, query, requestOptions);
