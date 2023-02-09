@@ -40,7 +40,7 @@ export function createSdkClient(options: SdkOptions) {
       return requester.request(options);
     },
     billing: {
-      invoices: {
+      invoices: proxyPathParameter('id', {
         id: (id: number | string) => ({
           get(
             query?: any,
@@ -53,7 +53,7 @@ export function createSdkClient(options: SdkOptions) {
             );
           },
         }),
-      },
+      }),
     },
     companies: {
       post(
@@ -70,6 +70,36 @@ export type SdkClient = ReturnType<typeof createSdkClient>;
 
 export const CancelToken = axios.CancelToken;
 export const isCancel = axios.isCancel;
+
+type ProxyPathParameter<
+  Key extends string,
+  T extends { [K in Key]: (...args: any) => any },
+> = T & T[Key] & { [K in \`\${string}\${'id' | 'Id' | 'ID'}\`]: T[Key] };
+
+function proxyPathParameter<
+  Key extends string,
+  T extends { [K in Key]: (...args: any) => any },
+>(key: Key, node: T): ProxyPathParameter<Key, T> {
+  const handler = node[key];
+  return new Proxy(handler, {
+    get(target, p) {
+      if (Object.hasOwnProperty.call(node, p)) {
+        return (node as any)[p];
+      }
+
+      if (
+        typeof p === 'string' &&
+        !p.endsWith('id') &&
+        !p.endsWith('Id') &&
+        !p.endsWith('ID')
+      ) {
+        throw new Error(\`Path segment "\${p}" does not exist\`);
+      }
+
+      return handler;
+    },
+  }) as ProxyPathParameter<Key, T>;
+}
 "
 `;
 
@@ -141,7 +171,7 @@ export function createSdkClient(options: SdkOptions) {
     request(options: AxiosRequestConfig) {
       return requester.request(options);
     },
-    companies: {
+    companies: proxyPathParameter('id', {
       id: (id: number | string) => ({
         archive: {
           post(
@@ -186,7 +216,7 @@ export function createSdkClient(options: SdkOptions) {
       ): Promise<types.CompanyResponse> {
         return requester.post(\`/companies\`, data, requestOptions);
       },
-    },
+    }),
   };
 }
 
@@ -194,6 +224,36 @@ export type SdkClient = ReturnType<typeof createSdkClient>;
 
 export const CancelToken = axios.CancelToken;
 export const isCancel = axios.isCancel;
+
+type ProxyPathParameter<
+  Key extends string,
+  T extends { [K in Key]: (...args: any) => any },
+> = T & T[Key] & { [K in \`\${string}\${'id' | 'Id' | 'ID'}\`]: T[Key] };
+
+function proxyPathParameter<
+  Key extends string,
+  T extends { [K in Key]: (...args: any) => any },
+>(key: Key, node: T): ProxyPathParameter<Key, T> {
+  const handler = node[key];
+  return new Proxy(handler, {
+    get(target, p) {
+      if (Object.hasOwnProperty.call(node, p)) {
+        return (node as any)[p];
+      }
+
+      if (
+        typeof p === 'string' &&
+        !p.endsWith('id') &&
+        !p.endsWith('Id') &&
+        !p.endsWith('ID')
+      ) {
+        throw new Error(\`Path segment "\${p}" does not exist\`);
+      }
+
+      return handler;
+    },
+  }) as ProxyPathParameter<Key, T>;
+}
 "
 `;
 
@@ -353,7 +413,7 @@ export function createSdkClient(options: SdkOptions) {
     request(options: AxiosRequestConfig) {
       return requester.request(options);
     },
-    user_roles: {
+    user_roles: proxyPathParameter('role_id', {
       role_id: (role_id: number | string) => ({
         get(
           query?: any,
@@ -362,7 +422,7 @@ export function createSdkClient(options: SdkOptions) {
           return requester.get(\`/user-roles/\${role_id}\`, query, requestOptions);
         },
       }),
-    },
+    }),
   };
 }
 
@@ -370,6 +430,36 @@ export type SdkClient = ReturnType<typeof createSdkClient>;
 
 export const CancelToken = axios.CancelToken;
 export const isCancel = axios.isCancel;
+
+type ProxyPathParameter<
+  Key extends string,
+  T extends { [K in Key]: (...args: any) => any },
+> = T & T[Key] & { [K in \`\${string}\${'id' | 'Id' | 'ID'}\`]: T[Key] };
+
+function proxyPathParameter<
+  Key extends string,
+  T extends { [K in Key]: (...args: any) => any },
+>(key: Key, node: T): ProxyPathParameter<Key, T> {
+  const handler = node[key];
+  return new Proxy(handler, {
+    get(target, p) {
+      if (Object.hasOwnProperty.call(node, p)) {
+        return (node as any)[p];
+      }
+
+      if (
+        typeof p === 'string' &&
+        !p.endsWith('id') &&
+        !p.endsWith('Id') &&
+        !p.endsWith('ID')
+      ) {
+        throw new Error(\`Path segment "\${p}" does not exist\`);
+      }
+
+      return handler;
+    },
+  }) as ProxyPathParameter<Key, T>;
+}
 "
 `;
 
@@ -453,7 +543,7 @@ export function createSdkClient(options: SdkOptions) {
     request(options: AxiosRequestConfig) {
       return requester.request(options);
     },
-    pets: {
+    pets: proxyPathParameter('id', {
       id: (id: number | string) => ({
         get(query?: any, requestOptions?: RequestOptions): Promise<types.Pet> {
           return requester.get(\`/pets/\${id}\`, query, requestOptions);
@@ -474,7 +564,7 @@ export function createSdkClient(options: SdkOptions) {
       ): Promise<types.Pet> {
         return requester.post(\`/pets\`, data, requestOptions);
       },
-    },
+    }),
   };
 }
 
@@ -482,6 +572,36 @@ export type SdkClient = ReturnType<typeof createSdkClient>;
 
 export const CancelToken = axios.CancelToken;
 export const isCancel = axios.isCancel;
+
+type ProxyPathParameter<
+  Key extends string,
+  T extends { [K in Key]: (...args: any) => any },
+> = T & T[Key] & { [K in \`\${string}\${'id' | 'Id' | 'ID'}\`]: T[Key] };
+
+function proxyPathParameter<
+  Key extends string,
+  T extends { [K in Key]: (...args: any) => any },
+>(key: Key, node: T): ProxyPathParameter<Key, T> {
+  const handler = node[key];
+  return new Proxy(handler, {
+    get(target, p) {
+      if (Object.hasOwnProperty.call(node, p)) {
+        return (node as any)[p];
+      }
+
+      if (
+        typeof p === 'string' &&
+        !p.endsWith('id') &&
+        !p.endsWith('Id') &&
+        !p.endsWith('ID')
+      ) {
+        throw new Error(\`Path segment "\${p}" does not exist\`);
+      }
+
+      return handler;
+    },
+  }) as ProxyPathParameter<Key, T>;
+}
 "
 `;
 
@@ -631,6 +751,36 @@ export type SdkClient = ReturnType<typeof createSdkClient>;
 
 export const CancelToken = axios.CancelToken;
 export const isCancel = axios.isCancel;
+
+type ProxyPathParameter<
+  Key extends string,
+  T extends { [K in Key]: (...args: any) => any },
+> = T & T[Key] & { [K in \`\${string}\${'id' | 'Id' | 'ID'}\`]: T[Key] };
+
+function proxyPathParameter<
+  Key extends string,
+  T extends { [K in Key]: (...args: any) => any },
+>(key: Key, node: T): ProxyPathParameter<Key, T> {
+  const handler = node[key];
+  return new Proxy(handler, {
+    get(target, p) {
+      if (Object.hasOwnProperty.call(node, p)) {
+        return (node as any)[p];
+      }
+
+      if (
+        typeof p === 'string' &&
+        !p.endsWith('id') &&
+        !p.endsWith('Id') &&
+        !p.endsWith('ID')
+      ) {
+        throw new Error(\`Path segment "\${p}" does not exist\`);
+      }
+
+      return handler;
+    },
+  }) as ProxyPathParameter<Key, T>;
+}
 "
 `;
 

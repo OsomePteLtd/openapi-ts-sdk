@@ -44,3 +44,33 @@ export type SdkClient = ReturnType<typeof createSdkClient>;
 
 export const CancelToken = axios.CancelToken;
 export const isCancel = axios.isCancel;
+
+type ProxyPathParameter<
+  Key extends string,
+  T extends { [K in Key]: (...args: any) => any },
+> = T & T[Key] & { [K in \`\${string}\${'id' | 'Id' | 'ID'}\`]: T[Key] };
+
+function proxyPathParameter<
+  Key extends string,
+  T extends { [K in Key]: (...args: any) => any },
+>(key: Key, node: T): ProxyPathParameter<Key, T> {
+  const handler = node[key];
+  return new Proxy(handler, {
+    get(target, p) {
+      if (Object.hasOwnProperty.call(node, p)) {
+        return (node as any)[p];
+      }
+
+      if (
+        typeof p === 'string' &&
+        !p.endsWith('id') &&
+        !p.endsWith('Id') &&
+        !p.endsWith('ID')
+      ) {
+        throw new Error(\`Path segment "\${p}" does not exist\`);
+      }
+
+      return handler;
+    },
+  }) as ProxyPathParameter<Key, T>;
+}
