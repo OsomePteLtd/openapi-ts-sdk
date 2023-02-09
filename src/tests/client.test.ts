@@ -62,3 +62,18 @@ it('treats any unknown path segment as path parameter', () => {
     },
   );
 });
+
+it("doesn't treat known path segments as path parameters", () => {
+  return import(join(tmpDirResult.name, 'client.ts')).then(
+    async ({ createSdkClient }) => {
+      const baseUrl = 'https://example.com';
+      const expectedUrl = '/pets';
+      const getNock = nock(baseUrl).get(expectedUrl).reply(200);
+      const sdkClient = createSdkClient({ baseUrl });
+
+      await sdkClient.pets.get(1);
+
+      expect(getNock.isDone()).toBeTruthy();
+    },
+  );
+});
