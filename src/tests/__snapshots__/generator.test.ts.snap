@@ -71,7 +71,7 @@ export type SdkClient = ReturnType<typeof createSdkClient>;
 export const CancelToken = axios.CancelToken;
 export const isCancel = axios.isCancel;
 
-function proxifyPathParameter<
+function proxyPathParameter<
   Key extends string,
   T extends { [K in Key]: (...args: any) => any },
 >(key: Key, node: T): T & T[Key] {
@@ -206,7 +206,7 @@ export type SdkClient = ReturnType<typeof createSdkClient>;
 export const CancelToken = axios.CancelToken;
 export const isCancel = axios.isCancel;
 
-function proxifyPathParameter<
+function proxyPathParameter<
   Key extends string,
   T extends { [K in Key]: (...args: any) => any },
 >(key: Key, node: T): T & T[Key] {
@@ -393,7 +393,7 @@ export type SdkClient = ReturnType<typeof createSdkClient>;
 export const CancelToken = axios.CancelToken;
 export const isCancel = axios.isCancel;
 
-function proxifyPathParameter<
+function proxyPathParameter<
   Key extends string,
   T extends { [K in Key]: (...args: any) => any },
 >(key: Key, node: T): T & T[Key] {
@@ -516,7 +516,7 @@ export type SdkClient = ReturnType<typeof createSdkClient>;
 export const CancelToken = axios.CancelToken;
 export const isCancel = axios.isCancel;
 
-function proxifyPathParameter<
+function proxyPathParameter<
   Key extends string,
   T extends { [K in Key]: (...args: any) => any },
 >(key: Key, node: T): T & T[Key] {
@@ -676,7 +676,7 @@ export type SdkClient = ReturnType<typeof createSdkClient>;
 export const CancelToken = axios.CancelToken;
 export const isCancel = axios.isCancel;
 
-function proxifyPathParameter<
+function proxyPathParameter<
   Key extends string,
   T extends { [K in Key]: (...args: any) => any },
 >(key: Key, node: T): T & T[Key] {
