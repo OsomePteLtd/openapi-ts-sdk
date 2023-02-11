@@ -1,5 +1,4 @@
 import fs from 'fs';
-import { isFunction } from 'lodash';
 
 import { pascalCase } from './helpers';
 import {

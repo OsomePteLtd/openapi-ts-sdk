@@ -1,5 +1,4 @@
 import fs from 'fs';
-import { merge } from 'lodash';
 
 import { loadTemplate } from './clientTemplateLoader';
 import { format } from './formatter';
