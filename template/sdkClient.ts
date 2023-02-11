@@ -87,7 +87,7 @@ function proxyPathParameter<
         return (spec as any)[p];
       }
 
-      throw new Error(`Path segment "${p.toString()}" does not exist`);
+      throw new Error(\`Path segment "\${p.toString()}" does not exist\`);
     },
   }) as any;
 }
