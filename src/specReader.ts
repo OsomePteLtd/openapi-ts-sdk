@@ -152,7 +152,7 @@ function createRegularNode(parent: SdkNode, name: string): SdkRegularNode {
 function createFunctionNode(parent: SdkNode, name: string): SdkFunctionNode {
   return {
     parent,
-    name: 'pathParameter',
+    name,
     aliases: [name],
     isFunction: true,
     children: {},

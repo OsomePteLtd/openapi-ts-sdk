@@ -41,13 +41,13 @@ export function createSdkClient(options: SdkOptions) {
     },
     billing: {
       invoices: withPathParameters(['id'] as const, {
-        pathParameter: (pathParameter: number | string) => ({
+        pathParameter: (id: number | string) => ({
           get(
             query?: any,
             requestOptions?: RequestOptions,
-          ): Promise<types.AgGetBillingInvoicesByPathParameterResponse> {
+          ): Promise<types.AgGetBillingInvoicesByIdResponse> {
             return requester.get(
-              \`/billing/invoices/\${pathParameter}\`,
+              \`/billing/invoices/\${id}\`,
               query,
               requestOptions,
             );
@@ -101,7 +101,7 @@ function withPathParameters<
 `;
 
 exports[`Anonymous Types 2`] = `
-"export interface AgGetBillingInvoicesByPathParameterResponse {
+"export interface AgGetBillingInvoicesByIdResponse {
   invoice: {
     id: number;
   };
@@ -169,14 +169,14 @@ export function createSdkClient(options: SdkOptions) {
       return requester.request(options);
     },
     companies: withPathParameters(['id'] as const, {
-      pathParameter: (pathParameter: number | string) => ({
+      pathParameter: (id: number | string) => ({
         archive: {
           post(
             data: any = {},
             requestOptions?: RequestOptions,
           ): Promise<types.SuccessResponse> {
             return requester.post(
-              \`/companies/\${pathParameter}/archive\`,
+              \`/companies/\${id}/archive\`,
               data,
               requestOptions,
             );
@@ -186,31 +186,19 @@ export function createSdkClient(options: SdkOptions) {
           query?: any,
           requestOptions?: RequestOptions,
         ): Promise<types.CompanyResponse> {
-          return requester.get(
-            \`/companies/\${pathParameter}\`,
-            query,
-            requestOptions,
-          );
+          return requester.get(\`/companies/\${id}\`, query, requestOptions);
         },
         patch(
           data: types.CompanyUpdateRequest,
           requestOptions?: RequestOptions,
         ): Promise<types.CompanyResponse> {
-          return requester.patch(
-            \`/companies/\${pathParameter}\`,
-            data,
-            requestOptions,
-          );
+          return requester.patch(\`/companies/\${id}\`, data, requestOptions);
         },
         delete(
           data: any = {},
           requestOptions?: RequestOptions,
         ): Promise<types.SuccessResponse> {
-          return requester.delete(
-            \`/companies/\${pathParameter}\`,
-            data,
-            requestOptions,
-          );
+          return requester.delete(\`/companies/\${id}\`, data, requestOptions);
         },
       }),
       get(
@@ -420,16 +408,12 @@ export function createSdkClient(options: SdkOptions) {
       return requester.request(options);
     },
     user_roles: withPathParameters(['role_id'] as const, {
-      pathParameter: (pathParameter: number | string) => ({
+      pathParameter: (role_id: number | string) => ({
         get(
           query?: any,
           requestOptions?: RequestOptions,
-        ): Promise<types.AgGetUserRolesByPathParameterResponse> {
-          return requester.get(
-            \`/user-roles/\${pathParameter}\`,
-            query,
-            requestOptions,
-          );
+        ): Promise<types.AgGetUserRolesByRoleIdResponse> {
+          return requester.get(\`/user-roles/\${role_id}\`, query, requestOptions);
         },
       }),
     }),
@@ -471,7 +455,7 @@ function withPathParameters<
 `;
 
 exports[`Dashes and Underscores 2`] = `
-"export interface AgGetUserRolesByPathParameterResponse {
+"export interface AgGetUserRolesByRoleIdResponse {
   user_role: UserRole;
 }
 export interface UserRole {
@@ -551,25 +535,17 @@ export function createSdkClient(options: SdkOptions) {
       return requester.request(options);
     },
     pets: withPathParameters(['id', 'petId'] as const, {
-      pathParameter: (pathParameter: number | string) => ({
+      pathParameter: (id: number | string) => ({
         siblings: {
           get(query?: any, requestOptions?: RequestOptions): Promise<any> {
-            return requester.get(
-              \`/pets/\${pathParameter}/siblings\`,
-              query,
-              requestOptions,
-            );
+            return requester.get(\`/pets/\${id}/siblings\`, query, requestOptions);
           },
         },
         get(query?: any, requestOptions?: RequestOptions): Promise<types.Pet> {
-          return requester.get(\`/pets/\${pathParameter}\`, query, requestOptions);
+          return requester.get(\`/pets/\${id}\`, query, requestOptions);
         },
         delete(data: any = {}, requestOptions?: RequestOptions): Promise<any> {
-          return requester.delete(
-            \`/pets/\${pathParameter}\`,
-            data,
-            requestOptions,
-          );
+          return requester.delete(\`/pets/\${id}\`, data, requestOptions);
         },
       }),
       get(
@@ -857,7 +833,7 @@ Object.keys(schemas).forEach((name) => {
 exports[`Schema Prefix 1`] = `
 "export const schemas = {
   User: {} as any,
-  AgGetUsersByPathParameterResponse: {} as any,
+  AgGetUsersByIdResponse: {} as any,
 };
 
 schemas.User = Object.assign(schemas.User, {
@@ -866,10 +842,11 @@ schemas.User = Object.assign(schemas.User, {
   required: ['id', 'name'],
 });
 
-schemas.AgGetUsersByPathParameterResponse = Object.assign(
-  schemas.AgGetUsersByPathParameterResponse,
-  { type: 'object', properties: { user: schemas.User }, required: ['user'] },
-);
+schemas.AgGetUsersByIdResponse = Object.assign(schemas.AgGetUsersByIdResponse, {
+  type: 'object',
+  properties: { user: schemas.User },
+  required: ['user'],
+});
 
 Object.keys(schemas).forEach((name) => {
   schemas[name as keyof typeof schemas].$id = 'myFancyPrefix_' + name;
@@ -885,8 +862,7 @@ export interface SdkSchema<T> extends JSONSchema6 {
 }
 export const schemas = {
   User: {} as SdkSchema<types.User>,
-  AgGetUsersByPathParameterResponse:
-    {} as SdkSchema<types.AgGetUsersByPathParameterResponse>,
+  AgGetUsersByIdResponse: {} as SdkSchema<types.AgGetUsersByIdResponse>,
 };
 
 schemas.User = Object.assign(schemas.User, {
@@ -895,10 +871,11 @@ schemas.User = Object.assign(schemas.User, {
   required: ['id', 'name'],
 });
 
-schemas.AgGetUsersByPathParameterResponse = Object.assign(
-  schemas.AgGetUsersByPathParameterResponse,
-  { type: 'object', properties: { user: schemas.User }, required: ['user'] },
-);
+schemas.AgGetUsersByIdResponse = Object.assign(schemas.AgGetUsersByIdResponse, {
+  type: 'object',
+  properties: { user: schemas.User },
+  required: ['user'],
+});
 
 Object.keys(schemas).forEach((name) => {
   schemas[name as keyof typeof schemas].$id = 'default_' + name;

@@ -55,7 +55,7 @@ function writeRegularNode(spec: SdkSpec, lines: string[], node: SdkNode) {
 }
 
 function writeFunctionNode(spec: SdkSpec, lines: string[], node: SdkNode) {
-  lines.push(`${node.name}: (${node.name}: number | string) => ({`);
+  lines.push(`pathParameter: (${node.name}: number | string) => ({`);
   writeChildren(spec, lines, node);
   writeMethods(spec, lines, node);
   lines.push(`}),`);
