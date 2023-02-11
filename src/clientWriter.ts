@@ -35,19 +35,25 @@ function writeNode(spec: SdkSpec, lines: string[], node: SdkNode) {
 }
 
 function writeRegularNode(spec: SdkSpec, lines: string[], node: SdkNode) {
-  const pathParameterToProxy = Object.keys(node.children).find(
+  const pathParametersToProxy = Object.keys(node.children).filter(
     (k) => node.children[k].isFunction,
   );
+  const pathParametersToProxyArray =
+    pathParametersToProxy.length > 0
+      ? `[${pathParametersToProxy
+          .map((p) => `'${p.slice(1, -1)}'`)
+          .join(', ')}] as const`
+      : null;
   lines.push(
     `${node.name}: ${
-      pathParameterToProxy
-        ? `proxyPathParameter('${pathParameterToProxy.slice(1, -1)}', `
+      pathParametersToProxyArray
+        ? `proxyPathParameter(${pathParametersToProxyArray}, `
         : ''
     }{`,
   );
   writeChildren(spec, lines, node);
   writeMethods(spec, lines, node);
-  lines.push(`}${pathParameterToProxy ? ')' : ''},`);
+  lines.push(`}${pathParametersToProxyArray ? ')' : ''},`);
 }
 
 function writeFunctionNode(spec: SdkSpec, lines: string[], node: SdkNode) {

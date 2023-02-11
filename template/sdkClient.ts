@@ -45,32 +45,49 @@ export type SdkClient = ReturnType<typeof createSdkClient>;
 export const CancelToken = axios.CancelToken;
 export const isCancel = axios.isCancel;
 
-type ProxyPathParameter<
-  Key extends string,
-  T extends { [K in Key]: (...args: any) => any },
-> = T & T[Key] & { [K in \`\${string}\${'id' | 'Id' | 'ID'}\`]: T[Key] };
+type ProxyPathParameters<
+  Keys extends readonly string[],
+  Spec extends {
+    [K in Keys[number]]: (...args: any) => any;
+  },
+> = Omit<Spec, Keys[number]> &
+  MergePathParameters<Keys, Spec> & {
+    [K in Keys[number]]: MergePathParameters<Keys, Spec>;
+  };
+
+type MergePathParameters<
+  Keys extends readonly string[],
+  Spec extends {
+    [K in Keys[number]]: (...args: any) => any;
+  },
+> = (
+  ...args: Parameters<Spec[Keys[0]]>
+) => (Keys[0] extends keyof Spec ? ReturnType<Spec[Keys[0]]> : {}) &
+  (Keys[1] extends keyof Spec ? ReturnType<Spec[Keys[1]]> : {}) &
+  (Keys[2] extends keyof Spec ? ReturnType<Spec[Keys[2]]> : {});
 
 function proxyPathParameter<
-  Key extends string,
-  T extends { [K in Key]: (...args: any) => any },
->(key: Key, node: T): ProxyPathParameter<Key, T> {
-  const handler = node[key];
+  Keys extends readonly string[],
+  Spec extends {
+    [K in Keys[number]]: (...args: any) => any;
+  },
+>(keys: Keys, spec: Spec): ProxyPathParameters<Keys, Spec> {
+  const handler = (...args: unknown[]) => {
+    const specs = keys.map((k: Keys[number]) => spec[k](...args));
+    // TODO: deep merge here
+    return Object.assign({}, ...specs);
+  };
   return new Proxy(handler, {
     get(target, p) {
-      if (Object.hasOwnProperty.call(node, p)) {
-        return (node as any)[p];
+      if (typeof p === 'string' && keys.includes(p)) {
+        return handler;
       }
 
-      if (
-        typeof p === 'string' &&
-        !p.endsWith('id') &&
-        !p.endsWith('Id') &&
-        !p.endsWith('ID')
-      ) {
-        throw new Error(\`Path segment "\${p}" does not exist\`);
+      if (Object.hasOwnProperty.call(spec, p)) {
+        return (spec as any)[p];
       }
 
-      return handler;
+      throw new Error(`Path segment "${p.toString()}" does not exist`);
     },
-  }) as ProxyPathParameter<Key, T>;
+  }) as any;
 }
