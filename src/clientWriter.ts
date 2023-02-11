@@ -1,9 +1,10 @@
 import fs from 'fs';
-import { loadTemplate } from './clientTemplateLoader';
+import { merge } from 'lodash';
 
+import { loadTemplate } from './clientTemplateLoader';
 import { format } from './formatter';
 import { isNameValid } from './helpers';
-import { SdkMethod, SdkNode, SdkSpec } from './specReader';
+import { SdkFunctionNode, SdkMethod, SdkNode, SdkSpec } from './specReader';
 
 export async function writeClient(spec: SdkSpec, fileName: string) {
   const lines: string[] = [];
@@ -35,25 +36,23 @@ function writeNode(spec: SdkSpec, lines: string[], node: SdkNode) {
 }
 
 function writeRegularNode(spec: SdkSpec, lines: string[], node: SdkNode) {
-  const pathParametersToProxy = Object.keys(node.children).filter(
-    (k) => node.children[k].isFunction,
+  const pathParameter = Object.values(node.children).find(
+    (node) => node.isFunction,
   );
-  const pathParametersToProxyArray =
-    pathParametersToProxy.length > 0
-      ? `[${pathParametersToProxy
-          .map((p) => `'${p.slice(1, -1)}'`)
-          .join(', ')}] as const`
-      : null;
+  const pathParameterNames = pathParameter
+    ? `[${(pathParameter as SdkFunctionNode).aliases
+        .map((name) => `'${name}'`)
+        .join(', ')}] as const`
+    : null;
+
   lines.push(
     `${node.name}: ${
-      pathParametersToProxyArray
-        ? `proxyPathParameter(${pathParametersToProxyArray}, `
-        : ''
+      pathParameterNames ? `withPathParameters(${pathParameterNames}, ` : ''
     }{`,
   );
   writeChildren(spec, lines, node);
   writeMethods(spec, lines, node);
-  lines.push(`}${pathParametersToProxyArray ? ')' : ''},`);
+  lines.push(`}${pathParameterNames ? ')' : ''},`);
 }
 
 function writeFunctionNode(spec: SdkSpec, lines: string[], node: SdkNode) {

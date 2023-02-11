@@ -40,14 +40,14 @@ export function createSdkClient(options: SdkOptions) {
       return requester.request(options);
     },
     billing: {
-      invoices: proxyPathParameter(['id'] as const, {
-        id: (id: number | string) => ({
+      invoices: withPathParameters(['id'] as const, {
+        pathParameter: (pathParameter: number | string) => ({
           get(
             query?: any,
             requestOptions?: RequestOptions,
-          ): Promise<types.AgGetBillingInvoicesByIdResponse> {
+          ): Promise<types.AgGetBillingInvoicesByPathParameterResponse> {
             return requester.get(
-              \`/billing/invoices/\${id}\`,
+              \`/billing/invoices/\${pathParameter}\`,
               query,
               requestOptions,
             );
@@ -71,57 +71,37 @@ export type SdkClient = ReturnType<typeof createSdkClient>;
 export const CancelToken = axios.CancelToken;
 export const isCancel = axios.isCancel;
 
-type ProxyPathParameters<
+type WithPathParameters<
   Keys extends readonly string[],
-  Spec extends {
-    [K in Keys[number]]: (...args: any) => any;
-  },
-> = Omit<Spec, Keys[number]> &
-  MergePathParameters<Keys, Spec> & {
-    [K in Keys[number]]: MergePathParameters<Keys, Spec>;
+  Spec extends { pathParameter: (...args: any) => any },
+> = Spec['pathParameter'] &
+  Omit<Spec, 'pathParameter'> & {
+    [K in Keys[number]]: Spec['pathParameter'];
   };
 
-type MergePathParameters<
+function withPathParameters<
   Keys extends readonly string[],
-  Spec extends {
-    [K in Keys[number]]: (...args: any) => any;
-  },
-> = (
-  ...args: Parameters<Spec[Keys[0]]>
-) => (Keys[0] extends keyof Spec ? ReturnType<Spec[Keys[0]]> : {}) &
-  (Keys[1] extends keyof Spec ? ReturnType<Spec[Keys[1]]> : {}) &
-  (Keys[2] extends keyof Spec ? ReturnType<Spec[Keys[2]]> : {});
-
-function proxyPathParameter<
-  Keys extends readonly string[],
-  Spec extends {
-    [K in Keys[number]]: (...args: any) => any;
-  },
->(keys: Keys, spec: Spec): ProxyPathParameters<Keys, Spec> {
-  const handler = (...args: unknown[]) => {
-    const specs = keys.map((k: Keys[number]) => spec[k](...args));
-    // TODO: deep merge here
-    return Object.assign({}, ...specs);
-  };
-  return new Proxy(handler, {
-    get(target, p) {
-      if (typeof p === 'string' && keys.includes(p)) {
-        return handler;
+  Spec extends { pathParameter: (...args: any) => any },
+>(keys: Keys, spec: Spec): WithPathParameters<Keys, Spec> {
+  return new Proxy(spec.pathParameter, {
+    get(target, key) {
+      if (typeof key === 'string' && keys.includes(key)) {
+        return spec.pathParameter;
       }
 
-      if (Object.hasOwnProperty.call(spec, p)) {
-        return (spec as any)[p];
+      if (key !== 'pathParameter' && Object.hasOwnProperty.call(spec, key)) {
+        return spec[key as keyof Spec];
       }
 
-      throw new Error(\`Path segment "\${p.toString()}" does not exist\`);
+      throw new Error('Path segment "' + key.toString() + '" does not exist');
     },
-  }) as any;
+  }) as WithPathParameters<Keys, Spec>;
 }
 "
 `;
 
 exports[`Anonymous Types 2`] = `
-"export interface AgGetBillingInvoicesByIdResponse {
+"export interface AgGetBillingInvoicesByPathParameterResponse {
   invoice: {
     id: number;
   };
@@ -188,15 +168,15 @@ export function createSdkClient(options: SdkOptions) {
     request(options: AxiosRequestConfig) {
       return requester.request(options);
     },
-    companies: proxyPathParameter(['id'] as const, {
-      id: (id: number | string) => ({
+    companies: withPathParameters(['id'] as const, {
+      pathParameter: (pathParameter: number | string) => ({
         archive: {
           post(
             data: any = {},
             requestOptions?: RequestOptions,
           ): Promise<types.SuccessResponse> {
             return requester.post(
-              \`/companies/\${id}/archive\`,
+              \`/companies/\${pathParameter}/archive\`,
               data,
               requestOptions,
             );
@@ -206,19 +186,31 @@ export function createSdkClient(options: SdkOptions) {
           query?: any,
           requestOptions?: RequestOptions,
         ): Promise<types.CompanyResponse> {
-          return requester.get(\`/companies/\${id}\`, query, requestOptions);
+          return requester.get(
+            \`/companies/\${pathParameter}\`,
+            query,
+            requestOptions,
+          );
         },
         patch(
           data: types.CompanyUpdateRequest,
           requestOptions?: RequestOptions,
         ): Promise<types.CompanyResponse> {
-          return requester.patch(\`/companies/\${id}\`, data, requestOptions);
+          return requester.patch(
+            \`/companies/\${pathParameter}\`,
+            data,
+            requestOptions,
+          );
         },
         delete(
           data: any = {},
           requestOptions?: RequestOptions,
         ): Promise<types.SuccessResponse> {
-          return requester.delete(\`/companies/\${id}\`, data, requestOptions);
+          return requester.delete(
+            \`/companies/\${pathParameter}\`,
+            data,
+            requestOptions,
+          );
         },
       }),
       get(
@@ -242,51 +234,31 @@ export type SdkClient = ReturnType<typeof createSdkClient>;
 export const CancelToken = axios.CancelToken;
 export const isCancel = axios.isCancel;
 
-type ProxyPathParameters<
+type WithPathParameters<
   Keys extends readonly string[],
-  Spec extends {
-    [K in Keys[number]]: (...args: any) => any;
-  },
-> = Omit<Spec, Keys[number]> &
-  MergePathParameters<Keys, Spec> & {
-    [K in Keys[number]]: MergePathParameters<Keys, Spec>;
+  Spec extends { pathParameter: (...args: any) => any },
+> = Spec['pathParameter'] &
+  Omit<Spec, 'pathParameter'> & {
+    [K in Keys[number]]: Spec['pathParameter'];
   };
 
-type MergePathParameters<
+function withPathParameters<
   Keys extends readonly string[],
-  Spec extends {
-    [K in Keys[number]]: (...args: any) => any;
-  },
-> = (
-  ...args: Parameters<Spec[Keys[0]]>
-) => (Keys[0] extends keyof Spec ? ReturnType<Spec[Keys[0]]> : {}) &
-  (Keys[1] extends keyof Spec ? ReturnType<Spec[Keys[1]]> : {}) &
-  (Keys[2] extends keyof Spec ? ReturnType<Spec[Keys[2]]> : {});
-
-function proxyPathParameter<
-  Keys extends readonly string[],
-  Spec extends {
-    [K in Keys[number]]: (...args: any) => any;
-  },
->(keys: Keys, spec: Spec): ProxyPathParameters<Keys, Spec> {
-  const handler = (...args: unknown[]) => {
-    const specs = keys.map((k: Keys[number]) => spec[k](...args));
-    // TODO: deep merge here
-    return Object.assign({}, ...specs);
-  };
-  return new Proxy(handler, {
-    get(target, p) {
-      if (typeof p === 'string' && keys.includes(p)) {
-        return handler;
+  Spec extends { pathParameter: (...args: any) => any },
+>(keys: Keys, spec: Spec): WithPathParameters<Keys, Spec> {
+  return new Proxy(spec.pathParameter, {
+    get(target, key) {
+      if (typeof key === 'string' && keys.includes(key)) {
+        return spec.pathParameter;
       }
 
-      if (Object.hasOwnProperty.call(spec, p)) {
-        return (spec as any)[p];
+      if (key !== 'pathParameter' && Object.hasOwnProperty.call(spec, key)) {
+        return spec[key as keyof Spec];
       }
 
-      throw new Error(\`Path segment "\${p.toString()}" does not exist\`);
+      throw new Error('Path segment "' + key.toString() + '" does not exist');
     },
-  }) as any;
+  }) as WithPathParameters<Keys, Spec>;
 }
 "
 `;
@@ -447,13 +419,17 @@ export function createSdkClient(options: SdkOptions) {
     request(options: AxiosRequestConfig) {
       return requester.request(options);
     },
-    user_roles: proxyPathParameter(['role_id'] as const, {
-      role_id: (role_id: number | string) => ({
+    user_roles: withPathParameters(['role_id'] as const, {
+      pathParameter: (pathParameter: number | string) => ({
         get(
           query?: any,
           requestOptions?: RequestOptions,
-        ): Promise<types.AgGetUserRolesByRoleIdResponse> {
-          return requester.get(\`/user-roles/\${role_id}\`, query, requestOptions);
+        ): Promise<types.AgGetUserRolesByPathParameterResponse> {
+          return requester.get(
+            \`/user-roles/\${pathParameter}\`,
+            query,
+            requestOptions,
+          );
         },
       }),
     }),
@@ -465,57 +441,37 @@ export type SdkClient = ReturnType<typeof createSdkClient>;
 export const CancelToken = axios.CancelToken;
 export const isCancel = axios.isCancel;
 
-type ProxyPathParameters<
+type WithPathParameters<
   Keys extends readonly string[],
-  Spec extends {
-    [K in Keys[number]]: (...args: any) => any;
-  },
-> = Omit<Spec, Keys[number]> &
-  MergePathParameters<Keys, Spec> & {
-    [K in Keys[number]]: MergePathParameters<Keys, Spec>;
+  Spec extends { pathParameter: (...args: any) => any },
+> = Spec['pathParameter'] &
+  Omit<Spec, 'pathParameter'> & {
+    [K in Keys[number]]: Spec['pathParameter'];
   };
 
-type MergePathParameters<
+function withPathParameters<
   Keys extends readonly string[],
-  Spec extends {
-    [K in Keys[number]]: (...args: any) => any;
-  },
-> = (
-  ...args: Parameters<Spec[Keys[0]]>
-) => (Keys[0] extends keyof Spec ? ReturnType<Spec[Keys[0]]> : {}) &
-  (Keys[1] extends keyof Spec ? ReturnType<Spec[Keys[1]]> : {}) &
-  (Keys[2] extends keyof Spec ? ReturnType<Spec[Keys[2]]> : {});
-
-function proxyPathParameter<
-  Keys extends readonly string[],
-  Spec extends {
-    [K in Keys[number]]: (...args: any) => any;
-  },
->(keys: Keys, spec: Spec): ProxyPathParameters<Keys, Spec> {
-  const handler = (...args: unknown[]) => {
-    const specs = keys.map((k: Keys[number]) => spec[k](...args));
-    // TODO: deep merge here
-    return Object.assign({}, ...specs);
-  };
-  return new Proxy(handler, {
-    get(target, p) {
-      if (typeof p === 'string' && keys.includes(p)) {
-        return handler;
+  Spec extends { pathParameter: (...args: any) => any },
+>(keys: Keys, spec: Spec): WithPathParameters<Keys, Spec> {
+  return new Proxy(spec.pathParameter, {
+    get(target, key) {
+      if (typeof key === 'string' && keys.includes(key)) {
+        return spec.pathParameter;
       }
 
-      if (Object.hasOwnProperty.call(spec, p)) {
-        return (spec as any)[p];
+      if (key !== 'pathParameter' && Object.hasOwnProperty.call(spec, key)) {
+        return spec[key as keyof Spec];
       }
 
-      throw new Error(\`Path segment "\${p.toString()}" does not exist\`);
+      throw new Error('Path segment "' + key.toString() + '" does not exist');
     },
-  }) as any;
+  }) as WithPathParameters<Keys, Spec>;
 }
 "
 `;
 
 exports[`Dashes and Underscores 2`] = `
-"export interface AgGetUserRolesByRoleIdResponse {
+"export interface AgGetUserRolesByPathParameterResponse {
   user_role: UserRole;
 }
 export interface UserRole {
@@ -594,24 +550,26 @@ export function createSdkClient(options: SdkOptions) {
     request(options: AxiosRequestConfig) {
       return requester.request(options);
     },
-    pets: proxyPathParameter(['id', 'petId'] as const, {
-      id: (id: number | string) => ({
-        get(query?: any, requestOptions?: RequestOptions): Promise<types.Pet> {
-          return requester.get(\`/pets/\${id}\`, query, requestOptions);
-        },
-        delete(data: any = {}, requestOptions?: RequestOptions): Promise<any> {
-          return requester.delete(\`/pets/\${id}\`, data, requestOptions);
-        },
-      }),
-      petId: (petId: number | string) => ({
+    pets: withPathParameters(['id', 'petId'] as const, {
+      pathParameter: (pathParameter: number | string) => ({
         siblings: {
           get(query?: any, requestOptions?: RequestOptions): Promise<any> {
             return requester.get(
-              \`/pets/\${petId}/siblings\`,
+              \`/pets/\${pathParameter}/siblings\`,
               query,
               requestOptions,
             );
           },
+        },
+        get(query?: any, requestOptions?: RequestOptions): Promise<types.Pet> {
+          return requester.get(\`/pets/\${pathParameter}\`, query, requestOptions);
+        },
+        delete(data: any = {}, requestOptions?: RequestOptions): Promise<any> {
+          return requester.delete(
+            \`/pets/\${pathParameter}\`,
+            data,
+            requestOptions,
+          );
         },
       }),
       get(
@@ -635,51 +593,31 @@ export type SdkClient = ReturnType<typeof createSdkClient>;
 export const CancelToken = axios.CancelToken;
 export const isCancel = axios.isCancel;
 
-type ProxyPathParameters<
+type WithPathParameters<
   Keys extends readonly string[],
-  Spec extends {
-    [K in Keys[number]]: (...args: any) => any;
-  },
-> = Omit<Spec, Keys[number]> &
-  MergePathParameters<Keys, Spec> & {
-    [K in Keys[number]]: MergePathParameters<Keys, Spec>;
+  Spec extends { pathParameter: (...args: any) => any },
+> = Spec['pathParameter'] &
+  Omit<Spec, 'pathParameter'> & {
+    [K in Keys[number]]: Spec['pathParameter'];
   };
 
-type MergePathParameters<
+function withPathParameters<
   Keys extends readonly string[],
-  Spec extends {
-    [K in Keys[number]]: (...args: any) => any;
-  },
-> = (
-  ...args: Parameters<Spec[Keys[0]]>
-) => (Keys[0] extends keyof Spec ? ReturnType<Spec[Keys[0]]> : {}) &
-  (Keys[1] extends keyof Spec ? ReturnType<Spec[Keys[1]]> : {}) &
-  (Keys[2] extends keyof Spec ? ReturnType<Spec[Keys[2]]> : {});
-
-function proxyPathParameter<
-  Keys extends readonly string[],
-  Spec extends {
-    [K in Keys[number]]: (...args: any) => any;
-  },
->(keys: Keys, spec: Spec): ProxyPathParameters<Keys, Spec> {
-  const handler = (...args: unknown[]) => {
-    const specs = keys.map((k: Keys[number]) => spec[k](...args));
-    // TODO: deep merge here
-    return Object.assign({}, ...specs);
-  };
-  return new Proxy(handler, {
-    get(target, p) {
-      if (typeof p === 'string' && keys.includes(p)) {
-        return handler;
+  Spec extends { pathParameter: (...args: any) => any },
+>(keys: Keys, spec: Spec): WithPathParameters<Keys, Spec> {
+  return new Proxy(spec.pathParameter, {
+    get(target, key) {
+      if (typeof key === 'string' && keys.includes(key)) {
+        return spec.pathParameter;
       }
 
-      if (Object.hasOwnProperty.call(spec, p)) {
-        return (spec as any)[p];
+      if (key !== 'pathParameter' && Object.hasOwnProperty.call(spec, key)) {
+        return spec[key as keyof Spec];
       }
 
-      throw new Error(\`Path segment "\${p.toString()}" does not exist\`);
+      throw new Error('Path segment "' + key.toString() + '" does not exist');
     },
-  }) as any;
+  }) as WithPathParameters<Keys, Spec>;
 }
 "
 `;
@@ -831,51 +769,31 @@ export type SdkClient = ReturnType<typeof createSdkClient>;
 export const CancelToken = axios.CancelToken;
 export const isCancel = axios.isCancel;
 
-type ProxyPathParameters<
+type WithPathParameters<
   Keys extends readonly string[],
-  Spec extends {
-    [K in Keys[number]]: (...args: any) => any;
-  },
-> = Omit<Spec, Keys[number]> &
-  MergePathParameters<Keys, Spec> & {
-    [K in Keys[number]]: MergePathParameters<Keys, Spec>;
+  Spec extends { pathParameter: (...args: any) => any },
+> = Spec['pathParameter'] &
+  Omit<Spec, 'pathParameter'> & {
+    [K in Keys[number]]: Spec['pathParameter'];
   };
 
-type MergePathParameters<
+function withPathParameters<
   Keys extends readonly string[],
-  Spec extends {
-    [K in Keys[number]]: (...args: any) => any;
-  },
-> = (
-  ...args: Parameters<Spec[Keys[0]]>
-) => (Keys[0] extends keyof Spec ? ReturnType<Spec[Keys[0]]> : {}) &
-  (Keys[1] extends keyof Spec ? ReturnType<Spec[Keys[1]]> : {}) &
-  (Keys[2] extends keyof Spec ? ReturnType<Spec[Keys[2]]> : {});
-
-function proxyPathParameter<
-  Keys extends readonly string[],
-  Spec extends {
-    [K in Keys[number]]: (...args: any) => any;
-  },
->(keys: Keys, spec: Spec): ProxyPathParameters<Keys, Spec> {
-  const handler = (...args: unknown[]) => {
-    const specs = keys.map((k: Keys[number]) => spec[k](...args));
-    // TODO: deep merge here
-    return Object.assign({}, ...specs);
-  };
-  return new Proxy(handler, {
-    get(target, p) {
-      if (typeof p === 'string' && keys.includes(p)) {
-        return handler;
+  Spec extends { pathParameter: (...args: any) => any },
+>(keys: Keys, spec: Spec): WithPathParameters<Keys, Spec> {
+  return new Proxy(spec.pathParameter, {
+    get(target, key) {
+      if (typeof key === 'string' && keys.includes(key)) {
+        return spec.pathParameter;
       }
 
-      if (Object.hasOwnProperty.call(spec, p)) {
-        return (spec as any)[p];
+      if (key !== 'pathParameter' && Object.hasOwnProperty.call(spec, key)) {
+        return spec[key as keyof Spec];
       }
 
-      throw new Error(\`Path segment "\${p.toString()}" does not exist\`);
+      throw new Error('Path segment "' + key.toString() + '" does not exist');
     },
-  }) as any;
+  }) as WithPathParameters<Keys, Spec>;
 }
 "
 `;
@@ -939,7 +857,7 @@ Object.keys(schemas).forEach((name) => {
 exports[`Schema Prefix 1`] = `
 "export const schemas = {
   User: {} as any,
-  AgGetUsersByIdResponse: {} as any,
+  AgGetUsersByPathParameterResponse: {} as any,
 };
 
 schemas.User = Object.assign(schemas.User, {
@@ -948,11 +866,10 @@ schemas.User = Object.assign(schemas.User, {
   required: ['id', 'name'],
 });
 
-schemas.AgGetUsersByIdResponse = Object.assign(schemas.AgGetUsersByIdResponse, {
-  type: 'object',
-  properties: { user: schemas.User },
-  required: ['user'],
-});
+schemas.AgGetUsersByPathParameterResponse = Object.assign(
+  schemas.AgGetUsersByPathParameterResponse,
+  { type: 'object', properties: { user: schemas.User }, required: ['user'] },
+);
 
 Object.keys(schemas).forEach((name) => {
   schemas[name as keyof typeof schemas].$id = 'myFancyPrefix_' + name;
@@ -968,7 +885,8 @@ export interface SdkSchema<T> extends JSONSchema6 {
 }
 export const schemas = {
   User: {} as SdkSchema<types.User>,
-  AgGetUsersByIdResponse: {} as SdkSchema<types.AgGetUsersByIdResponse>,
+  AgGetUsersByPathParameterResponse:
+    {} as SdkSchema<types.AgGetUsersByPathParameterResponse>,
 };
 
 schemas.User = Object.assign(schemas.User, {
@@ -977,11 +895,10 @@ schemas.User = Object.assign(schemas.User, {
   required: ['id', 'name'],
 });
 
-schemas.AgGetUsersByIdResponse = Object.assign(schemas.AgGetUsersByIdResponse, {
-  type: 'object',
-  properties: { user: schemas.User },
-  required: ['user'],
-});
+schemas.AgGetUsersByPathParameterResponse = Object.assign(
+  schemas.AgGetUsersByPathParameterResponse,
+  { type: 'object', properties: { user: schemas.User }, required: ['user'] },
+);
 
 Object.keys(schemas).forEach((name) => {
   schemas[name as keyof typeof schemas].$id = 'default_' + name;

@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { isFunction } from 'lodash';
 
 import { pascalCase } from './helpers';
 import {
@@ -15,12 +16,23 @@ export interface SdkSpec {
   openApiVersion: OpenApiVersion;
 }
 
-export interface SdkNode {
+export type SdkNode = SdkRegularNode | SdkFunctionNode;
+
+export interface SdkBaseNode {
   parent?: SdkNode;
   name: string;
   isFunction: boolean;
   children: { [key: string]: SdkNode };
   methods: { [key: string]: SdkMethod };
+}
+
+export interface SdkRegularNode extends SdkBaseNode {
+  isFunction: false;
+}
+
+export interface SdkFunctionNode extends SdkBaseNode {
+  isFunction: true;
+  aliases: string[];
 }
 
 export interface SdkMethod {
@@ -87,10 +99,22 @@ function addUrl(
     return;
   }
   const [head, ...tail] = path;
-  if (!parent.children[head]) {
-    parent.children[head] = createNode(parent, head);
+  const { key, isFunction, name } = parsePathSegment(head);
+  const node = (parent.children[key] ??= isFunction
+    ? createFunctionNode(parent, name)
+    : createRegularNode(parent, name));
+  if (node.isFunction && !node.aliases.includes(name)) {
+    node.aliases.push(name);
   }
-  addUrl(spec, url, parent.children[head], tail, openApiVersion);
+  addUrl(spec, url, node, tail, openApiVersion);
+}
+
+function parsePathSegment(head: string) {
+  const match = head.match(/^\{(.+)\}$/);
+  const name = match ? match[1] : head;
+  const isFunction = Boolean(match);
+  const key = isFunction ? '{}' : name;
+  return { key, isFunction, name };
 }
 
 function addMethods(
@@ -116,13 +140,22 @@ function createRootNode(): SdkNode {
   return { name: '', isFunction: false, children: {}, methods: {} };
 }
 
-function createNode(parent: SdkNode, name: string): SdkNode {
-  const match = name.match(/^\{(.+)\}$/);
-  const cleanName = match ? match[1] : name;
+function createRegularNode(parent: SdkNode, name: string): SdkRegularNode {
   return {
     parent,
-    name: cleanName,
-    isFunction: Boolean(match),
+    name,
+    isFunction: false,
+    children: {},
+    methods: {},
+  };
+}
+
+function createFunctionNode(parent: SdkNode, name: string): SdkFunctionNode {
+  return {
+    parent,
+    name: 'pathParameter',
+    aliases: [name],
+    isFunction: true,
     children: {},
     methods: {},
   };
