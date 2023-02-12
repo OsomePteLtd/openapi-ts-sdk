@@ -99,9 +99,10 @@ function addUrl(
   }
   const [head, ...tail] = path;
   const { key, isFunction, name } = parsePathSegment(head);
-  const node = (parent.children[key] ??= isFunction
+  parent.children[key] ??= isFunction
     ? createFunctionNode(parent, name)
-    : createRegularNode(parent, name));
+    : createRegularNode(parent, name);
+  const node = parent.children[key];
   if (node.isFunction && !node.aliases.includes(name)) {
     node.aliases.push(name);
   }
