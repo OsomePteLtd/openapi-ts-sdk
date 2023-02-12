@@ -45,32 +45,29 @@ export type SdkClient = ReturnType<typeof createSdkClient>;
 export const CancelToken = axios.CancelToken;
 export const isCancel = axios.isCancel;
 
-type ProxyPathParameter<
-  Key extends string,
-  T extends { [K in Key]: (...args: any) => any },
-> = T & T[Key] & { [K in \`\${string}\${'id' | 'Id' | 'ID'}\`]: T[Key] };
+type WithPathParameters<
+  Keys extends readonly string[],
+  Spec extends { pathParameter: (...args: any) => any },
+> = Spec['pathParameter'] &
+  Omit<Spec, 'pathParameter'> & {
+    [K in Keys[number]]: Spec['pathParameter'];
+  };
 
-function proxyPathParameter<
-  Key extends string,
-  T extends { [K in Key]: (...args: any) => any },
->(key: Key, node: T): ProxyPathParameter<Key, T> {
-  const handler = node[key];
-  return new Proxy(handler, {
-    get(target, p) {
-      if (Object.hasOwnProperty.call(node, p)) {
-        return (node as any)[p];
+function withPathParameters<
+  Keys extends readonly string[],
+  Spec extends { pathParameter: (...args: any) => any },
+>(keys: Keys, spec: Spec): WithPathParameters<Keys, Spec> {
+  return new Proxy(spec.pathParameter, {
+    get(target, key) {
+      if (typeof key === 'string' && keys.includes(key)) {
+        return spec.pathParameter;
       }
 
-      if (
-        typeof p === 'string' &&
-        !p.endsWith('id') &&
-        !p.endsWith('Id') &&
-        !p.endsWith('ID')
-      ) {
-        throw new Error(\`Path segment "\${p}" does not exist\`);
+      if (key !== 'pathParameter' && Object.hasOwnProperty.call(spec, key)) {
+        return spec[key as keyof Spec];
       }
 
-      return handler;
+      throw new Error('Path segment "' + key.toString() + '" does not exist');
     },
-  }) as ProxyPathParameter<Key, T>;
+  }) as WithPathParameters<Keys, Spec>;
 }

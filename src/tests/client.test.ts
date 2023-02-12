@@ -18,75 +18,75 @@ afterAll(() => {
   tmpDirResult.removeCallback();
 });
 
-it('works', () => {
-  return import(join(tmpDirResult.name, 'client.ts'))
-    .then(async ({ createSdkClient }) => {
-      const baseUrl = 'https://example.com';
-      const expectedUrl = '/pets/1';
-      const getNock = nock(baseUrl).get(expectedUrl).reply(200);
-      const sdkClient = createSdkClient({ baseUrl });
+it('works', async () => {
+  const baseUrl = 'https://example.com';
+  const getPetNock = nock(baseUrl).get('/pets/1').reply(200);
+  const getSiblingsNock = nock(baseUrl).get('/pets/1/siblings').reply(200);
+  const sdkClient = await importSdkClient(baseUrl);
 
-      await sdkClient.pets.id(1).get();
+  await sdkClient.pets.id(1).get();
+  await sdkClient.pets.petId(1).siblings.get();
 
-      expect(getNock.isDone()).toBeTruthy();
-    })
-    .catch((e) => console.error(e));
+  expect(getPetNock.isDone()).toBeTruthy();
+  expect(getSiblingsNock.isDone()).toBeTruthy();
 });
 
-it('supports proxied path parameters', () => {
-  return import(join(tmpDirResult.name, 'client.ts')).then(
-    async ({ createSdkClient }) => {
-      const baseUrl = 'https://example.com';
-      const expectedUrl = '/pets/1';
-      const getNock = nock(baseUrl).get(expectedUrl).reply(200);
-      const sdkClient = createSdkClient({ baseUrl });
+it('supports proxied path parameters', async () => {
+  const baseUrl = 'https://example.com';
+  const getPetNock = nock(baseUrl).get('/pets/1').reply(200);
+  const getSiblingsNock = nock(baseUrl).get('/pets/1/siblings').reply(200);
+  const sdkClient = await importSdkClient(baseUrl);
 
-      await sdkClient.pets(1).get();
+  await sdkClient.pets(1).get();
+  await sdkClient.pets(1).siblings.get();
 
-      expect(getNock.isDone()).toBeTruthy();
-    },
+  expect(getPetNock.isDone()).toBeTruthy();
+  expect(getSiblingsNock.isDone()).toBeTruthy();
+});
+
+it('merges differently named path parameters', async () => {
+  const baseUrl = 'https://example.com';
+  const getPetNock = nock(baseUrl).get('/pets/1').reply(200);
+  const getSiblingsNock = nock(baseUrl).get('/pets/1/siblings').reply(200);
+  const sdkClient = await importSdkClient(baseUrl);
+
+  await sdkClient.pets.petId(1).get();
+  await sdkClient.pets.id(1).siblings.get();
+
+  expect(getPetNock.isDone()).toBeTruthy();
+  expect(getSiblingsNock.isDone()).toBeTruthy();
+});
+
+it("doesn't treat known path segments as path parameters", async () => {
+  const baseUrl = 'https://example.com';
+  const getNock = nock(baseUrl).get('/pets').reply(200);
+  const sdkClient = await importSdkClient(baseUrl);
+
+  await sdkClient.pets.get(1);
+
+  expect(getNock.isDone()).toBeTruthy();
+});
+
+it('throws on unknown path segments', async () => {
+  const baseUrl = 'https://example.com';
+  const sdkClient = await importSdkClient(baseUrl);
+
+  expect(() => sdkClient.pets.unknown(1).get()).toThrowError(
+    'Path segment "unknown" does not exist',
   );
 });
 
-it('treats any whitelisted unknown path segment as path parameter', () => {
+// helpers
+
+async function importSdkClient(baseUrl: string) {
   return import(join(tmpDirResult.name, 'client.ts')).then(
     async ({ createSdkClient }) => {
-      const baseUrl = 'https://example.com';
-      const expectedUrl = '/pets/1';
-      const getNock = nock(baseUrl).get(expectedUrl).reply(200);
       const sdkClient = createSdkClient({ baseUrl });
-
-      await sdkClient.pets.petId(1).get();
-
-      expect(getNock.isDone()).toBeTruthy();
+      return sdkClient;
+    },
+    (error) => {
+      console.error(error);
+      throw error;
     },
   );
-});
-
-it("doesn't treat known path segments as path parameters", () => {
-  return import(join(tmpDirResult.name, 'client.ts')).then(
-    async ({ createSdkClient }) => {
-      const baseUrl = 'https://example.com';
-      const expectedUrl = '/pets';
-      const getNock = nock(baseUrl).get(expectedUrl).reply(200);
-      const sdkClient = createSdkClient({ baseUrl });
-
-      await sdkClient.pets.get(1);
-
-      expect(getNock.isDone()).toBeTruthy();
-    },
-  );
-});
-
-it('throws on not whitelisted unknown path segments', () => {
-  return import(join(tmpDirResult.name, 'client.ts')).then(
-    async ({ createSdkClient }) => {
-      const baseUrl = 'https://example.com';
-      const sdkClient = createSdkClient({ baseUrl });
-
-      expect(() => sdkClient.pets.notWhitelisted(1).get()).toThrowError(
-        'Path segment "notWhitelisted" does not exist',
-      );
-    },
-  );
-});
+}
