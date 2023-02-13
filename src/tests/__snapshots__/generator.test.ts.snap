@@ -407,7 +407,7 @@ export function createSdkClient(options: SdkOptions) {
     request(options: AxiosRequestConfig) {
       return requester.request(options);
     },
-    user_roles: withPathParameters(['role_id'] as const, {
+    user_roles: withPathParameters(['role_id', 'id'] as const, {
       pathParameter: (role_id: number | string) => ({
         get(
           query?: any,
@@ -491,6 +491,96 @@ export enum ProcessDefinitionKey {
   csIncorporation = 'cs-incorporation',
   csIncorporationPteLtdLocal = 'cs-incorporation-pte-ltd-local',
   csAppointmentOfNewSecretary = 'cs-appointment-of-new-secretary',
+}
+"
+`;
+
+exports[`Id Path Parameter 1`] = `
+"import axios, { AxiosRequestConfig, AxiosError } from 'axios';
+
+import { RequestOptions, SdkOptions } from './options';
+import { SdkRequester } from './requester';
+import * as types from './types';
+
+export function createSdkClient(options: SdkOptions) {
+  const requester = new SdkRequester(options);
+  return {
+    setAuthToken(authToken: string | undefined | null) {
+      requester.setAuthToken(authToken);
+    },
+    setErrorHandler(handler: (error: AxiosError) => void) {
+      requester.setErrorHandler(handler);
+    },
+    setInterceptors(
+      interceptors: Parameters<typeof requester.setInterceptors>[0],
+    ) {
+      requester.setInterceptors(interceptors);
+    },
+    get(path: string, query?: object, requestOptions?: RequestOptions) {
+      return requester.get(path, query, requestOptions);
+    },
+    post(path: string, data?: object, requestOptions?: RequestOptions) {
+      return requester.post(path, data, requestOptions);
+    },
+    put(path: string, data?: object, requestOptions?: RequestOptions) {
+      return requester.put(path, data, requestOptions);
+    },
+    patch(path: string, data?: object, requestOptions?: RequestOptions) {
+      return requester.patch(path, data, requestOptions);
+    },
+    delete(path: string, data?: object, requestOptions?: RequestOptions) {
+      return requester.delete(path, data, requestOptions);
+    },
+    request(options: AxiosRequestConfig) {
+      return requester.request(options);
+    },
+    companies: withPathParameters(['companyId', 'id'] as const, {
+      pathParameter: (companyId: number | string) => ({
+        get(
+          query?: any,
+          requestOptions?: RequestOptions,
+        ): Promise<types.CompanyResponse> {
+          return requester.get(
+            \`/companies/\${companyId}\`,
+            query,
+            requestOptions,
+          );
+        },
+      }),
+    }),
+  };
+}
+
+export type SdkClient = ReturnType<typeof createSdkClient>;
+
+export const CancelToken = axios.CancelToken;
+export const isCancel = axios.isCancel;
+
+type WithPathParameters<
+  Keys extends readonly string[],
+  Spec extends { pathParameter: (...args: any) => any },
+> = Spec['pathParameter'] &
+  Omit<Spec, 'pathParameter'> & {
+    [K in Keys[number]]: Spec['pathParameter'];
+  };
+
+function withPathParameters<
+  Keys extends readonly string[],
+  Spec extends { pathParameter: (...args: any) => any },
+>(keys: Keys, spec: Spec): WithPathParameters<Keys, Spec> {
+  return new Proxy(spec.pathParameter, {
+    get(target, key) {
+      if (typeof key === 'string' && keys.includes(key)) {
+        return spec.pathParameter;
+      }
+
+      if (key !== 'pathParameter' && Object.hasOwnProperty.call(spec, key)) {
+        return spec[key as keyof Spec];
+      }
+
+      throw new Error('Path segment "' + key.toString() + '" does not exist');
+    },
+  }) as WithPathParameters<Keys, Spec>;
 }
 "
 `;
