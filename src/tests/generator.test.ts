@@ -136,7 +136,7 @@ it('Id Path Parameter', async () => {
     Company { id: i, name: s, size: i, meta?: o }
     CompanyResponse { company: Company }
   `;
-  const { clientSource, typesSource, schemasSource } = await generate({
+  const { clientSource } = await generate({
     endpoints,
     models,
   });
