@@ -127,6 +127,24 @@ it('Schema Prefix', async () => {
   expect(schemasSource).toMatchSnapshot();
 });
 
+it('Id Path Parameter', async () => {
+  const endpoints = `
+    @token GET /companies/:companyId
+      => CompanyResponse
+  `;
+  const models = `
+    Company { id: i, name: s, size: i, meta?: o }
+    CompanyResponse { company: Company }
+  `;
+  const { clientSource, typesSource, schemasSource } = await generate({
+    endpoints,
+    models,
+  });
+  expect(clientSource).toMatchSnapshot();
+  expect(typesSource).toMatchSnapshot();
+  expect(schemasSource).toMatchSnapshot();
+});
+
 it('Typed Schemas', async () => {
   const endpoints = `
     GET /users/:id

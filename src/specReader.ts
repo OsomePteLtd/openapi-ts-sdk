@@ -151,10 +151,14 @@ function createRegularNode(parent: SdkNode, name: string): SdkRegularNode {
 }
 
 function createFunctionNode(parent: SdkNode, name: string): SdkFunctionNode {
+  const aliases = [name];
+  if (name !== 'id') {
+    aliases.push('id');
+  }
   return {
     parent,
     name,
-    aliases: [name],
+    aliases,
     isFunction: true,
     children: {},
     methods: {},
