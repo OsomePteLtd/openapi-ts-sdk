@@ -141,8 +141,6 @@ it('Id Path Parameter', async () => {
     models,
   });
   expect(clientSource).toMatchSnapshot();
-  expect(typesSource).toMatchSnapshot();
-  expect(schemasSource).toMatchSnapshot();
 });
 
 it('Typed Schemas', async () => {

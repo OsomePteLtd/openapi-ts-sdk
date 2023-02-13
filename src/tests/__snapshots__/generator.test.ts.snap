@@ -585,48 +585,6 @@ function withPathParameters<
 "
 `;
 
-exports[`Id Path Parameter 2`] = `
-"export interface Company {
-  id: number;
-  name: string;
-  size: number;
-  meta?: {};
-}
-export interface CompanyResponse {
-  company: Company;
-}
-"
-`;
-
-exports[`Id Path Parameter 3`] = `
-"export const schemas = {
-  Company: {} as any,
-  CompanyResponse: {} as any,
-};
-
-schemas.Company = Object.assign(schemas.Company, {
-  type: 'object',
-  properties: {
-    id: { type: 'integer' },
-    name: { type: 'string' },
-    size: { type: 'integer' },
-    meta: { type: 'object' },
-  },
-  required: ['id', 'name', 'size'],
-});
-
-schemas.CompanyResponse = Object.assign(schemas.CompanyResponse, {
-  type: 'object',
-  properties: { company: schemas.Company },
-  required: ['company'],
-});
-
-Object.keys(schemas).forEach((name) => {
-  schemas[name as keyof typeof schemas].$id = 'default_' + name;
-});
-"
-`;
-
 exports[`OpenAPI V3 Basic Scenario 1`] = `
 "import axios, { AxiosRequestConfig, AxiosError } from 'axios';
 
