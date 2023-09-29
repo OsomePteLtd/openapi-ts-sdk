@@ -24,7 +24,7 @@ export class SdkRequester {
   private options: SdkOptions;
   private axiosInstance: AxiosInstance;
   private authToken?: string | null;
-  private locale?: string | null;
+  private language?: string | null;
 
   constructor(options: SdkOptions) {
     this.options = options;
@@ -38,8 +38,8 @@ export class SdkRequester {
     this.authToken = authToken;
   }
 
-  setLocale(locale: string | undefined | null) {
-    this.locale = locale;
+  setLanguage(language: string | undefined | null) {
+    this.language = language;
   }
 
   setErrorHandler(handler: (error: AxiosError) => void) {
@@ -173,8 +173,8 @@ export class SdkRequester {
     if (idempotencyKey) {
       headers['Idempotency-Key'] = idempotencyKey;
     }
-    if (this.locale) {
-      headers['X-Language'] = this.locale;
+    if (this.language) {
+      headers['x-language'] = this.language;
     }
     return headers;
   }
