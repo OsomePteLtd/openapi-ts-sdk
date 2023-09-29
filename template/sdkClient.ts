@@ -10,6 +10,9 @@ export function createSdkClient(options: SdkOptions) {
     setAuthToken(authToken: string | undefined | null) {
       requester.setAuthToken(authToken);
     },
+    setLanguage(language: string | undefined | null) {
+      requester.setLanguage(language);
+    },
     setErrorHandler(handler: (error: AxiosError) => void) {
       requester.setErrorHandler(handler);
     },
