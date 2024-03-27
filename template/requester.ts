@@ -25,6 +25,7 @@ export class SdkRequester {
   private axiosInstance: AxiosInstance;
   private authToken?: string | null;
   private language?: string | null;
+  private initiator?: string | null;
 
   constructor(options: SdkOptions) {
     this.options = options;
@@ -175,6 +176,9 @@ export class SdkRequester {
     }
     if (this.language) {
       headers['x-language'] = this.language;
+    }
+    if (this.initiator) {
+      headers['x-initiator'] = this.initiator;
     }
     return headers;
   }
