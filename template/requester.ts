@@ -43,6 +43,10 @@ export class SdkRequester {
     this.language = language;
   }
 
+  setInitiator(initiator: string | undefined | null) {
+    this.initiator = initiator;
+  }
+
   setErrorHandler(handler: (error: AxiosError) => void) {
     this.axiosInstance.interceptors.response.use(
       (response) => {
