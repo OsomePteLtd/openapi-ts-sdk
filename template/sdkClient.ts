@@ -13,6 +13,9 @@ export function createSdkClient(options: SdkOptions) {
     setLanguage(language: string | undefined | null) {
       requester.setLanguage(language);
     },
+    setInitiator(initiator: string | undefined | null) {
+      requester.setInitiator(initiator);
+    },
     setErrorHandler(handler: (error: AxiosError) => void) {
       requester.setErrorHandler(handler);
     },
