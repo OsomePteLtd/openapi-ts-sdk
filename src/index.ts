@@ -2,6 +2,7 @@ import fs from 'fs';
 import { join } from 'path';
 
 import { writeClient } from './clientWriter';
+import { writeFakes } from './fakeWriter';
 import { writeSchemas } from './schemaWriter';
 import { readSpecFromFiles } from './specReader';
 import { writeTypes } from './typeWriter';
@@ -23,6 +24,7 @@ export async function generateSdk(options: {
     prefix,
     typedSchemas,
   });
+  await writeFakes(spec, join(outDir, 'fakes.ts'));
 }
 
 // private
