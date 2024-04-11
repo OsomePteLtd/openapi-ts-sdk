@@ -159,6 +159,16 @@ it('Typed Schemas', async () => {
   expect(schemasSource).toMatchSnapshot();
 });
 
+it('Fakes', async () => {
+  const models = `
+    WithoutId { name: s }
+    User { id: i, email: s }
+    Company { id: i, name: s }
+  `;
+  const { fakesSource } = await generate({ endpoints: '', models });
+  expect(fakesSource).toMatchSnapshot();
+});
+
 describe('OpenAPI V3', () => {
   it('Basic Scenario', async () => {
     const { clientSource, typesSource, schemasSource } =

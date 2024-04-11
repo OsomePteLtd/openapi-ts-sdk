@@ -40,13 +40,15 @@ export async function generate(options: {
   const clientPath = join(tmpDirResult.name, 'client.ts');
   const typesPath = join(tmpDirResult.name, 'types.ts');
   const schemasPath = join(tmpDirResult.name, 'schemas.ts');
+  const fakesPath = join(tmpDirResult.name, 'fakes.ts');
   const clientSource = fs.readFileSync(clientPath, 'utf8');
   const typesSource = fs.readFileSync(typesPath, 'utf8');
   const schemasSource = fs.readFileSync(schemasPath, 'utf8');
+  const fakesSource = fs.readFileSync(fakesPath, 'utf8');
   tmpDirTinyspec.removeCallback();
   tmpDirJson.removeCallback();
   tmpDirResult.removeCallback();
-  return { clientSource, typesSource, schemasSource };
+  return { clientSource, typesSource, schemasSource, fakesSource };
 }
 
 export async function generateFromOpenApiSpecs(options: {
