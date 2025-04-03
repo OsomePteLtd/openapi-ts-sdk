@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Cancel previous workflow runs
-        uses: styfle/cancel-workflow-action@0.4.0
+        uses: styfle/cancel-workflow-action@ee9e0f86fb1a4d7029390154477333bf53e41c5e # 0.4.0
         with:
           access_token: ${{ github.token }}
 
@@ -28,7 +28,7 @@ jobs:
         run: nvm install
 
       - name: Restore cache
-        uses: c-hive/gha-npm-cache@v1
+        uses: c-hive/gha-npm-cache@2de807f96074eec2c36c2d321c20724cd04112dd # v1
 
       - name: Install dependencies
         run: npm ci
@@ -48,7 +48,7 @@ jobs:
         run: nvm install
 
       - name: Restore cache
-        uses: c-hive/gha-npm-cache@v1
+        uses: c-hive/gha-npm-cache@2de807f96074eec2c36c2d321c20724cd04112dd # v1
 
       - name: Install dependencies
         run: npm ci
@@ -71,7 +71,7 @@ jobs:
         run: nvm install
 
       - name: Restore cache
-        uses: c-hive/gha-npm-cache@v1
+        uses: c-hive/gha-npm-cache@2de807f96074eec2c36c2d321c20724cd04112dd # v1
 
       - name: Install dependencies
         run: npm ci
